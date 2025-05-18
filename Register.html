@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="emailPass">
+        <h2>Create an account</h2>
+        <br />
+        <p>
+          Create a new online account and join The HardWARE Shop or link
+          accounts (joining or linking is optional).
+        </p>
+        <br />
+        <h3>Account sign in details</h3>
+        <br />
+        <input type="email" placeholder="Enter your email" /><br />
+        <input type="password" placeholder="Create a password" /><br />
+      </div>
+
+      <div class="aboutyou">
+        <input type="text" placeholder="First Name" /><br />
+        <input type="text" placeholder="Last Name" /><br />
+        <input type="text" placeholder="Address" /><br />
+        <input type="number" placeholder="Phone Number" /><br />
+
+        <label for="contactType">Select Contact Type:</label>
+        <select id="contactType" name="contactType">
+          <option value="" disabled selected>Select type</option>
+          <option value="mobile">Mobile</option>
+          <option value="home">Home</option>
+          <option value="office">Business</option></select
+        ><br />
+
+        <label for="birthday">Birthday Month:</label>
+        <input type="month" id="birthday" /><br />
+      </div>
+      <input type="button" value="Create Account" class="styled" />
+      <p>Already have an account? <a href="login.html">Sign in here</a></p>
+    </div>
+  </body>
+</html>
