@@ -99,3 +99,39 @@ input {
         inset -2px -2px 3px rgb(255 255 255 / 60%),
         inset 2px 2px 3px rgb(0 0 0 / 60%);
 }
+
+.user-menu {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.menu-btn {
+    padding: 8px 12px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 160px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    background-color: #f0f0f0;
+}
