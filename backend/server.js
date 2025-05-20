@@ -3,9 +3,12 @@ const connectDB = require('./db');
 const path = require('path');
 const User = require('./models/User');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 
 const app = express();
 app.use(express.json());
+app.use(cors()); // ⬅️ Allow frontend to access backend
 
 connectDB();
 
@@ -77,6 +80,7 @@ app.post('/api/users/newUser', async (req, res) => {
 });
 // LOGIN
 app.post('/api/users/login', async (req, res) => {
+    console.log("BODY:", req.body);
     try {
         const { email, password } = req.body;
 
@@ -85,7 +89,11 @@ app.post('/api/users/login', async (req, res) => {
         if (user) {
             return res.status(200).json({
                 message: "Log in successfully. 🙂",
-                user: user
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    name: user.first_name
+                }
             });
         }
 

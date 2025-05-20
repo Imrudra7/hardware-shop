@@ -17,14 +17,17 @@
             <br />
             <h3>Account sign in details</h3>
             <br />
-            <form action="/" method="get">
-                <input type="email" placeholder="Enter your email"><br>
-                <input type="password" placeholder="Enter your password"><br>
-
+            <form id="loginForm">
+                <input type="email" name="email" placeholder="Enter your email" autocomplete="email" required /><br />
+                <input type="password" name="password" placeholder="Enter your password" autocomplete="current-password"
+                    required /><br />
                 <input type="submit" value="Sign in" class="styled" />
+            </form>
+
         </div>
         <p>Don't have an account? <a href="/register">Create one now</a></p>
     </div>
+    <script src="./script.js"></script>
 </body>
 
 </html>
