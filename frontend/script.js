@@ -1,4 +1,6 @@
-
+const API_BASE_URL = location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://hardware-shop-backend-pwf6.onrender.com"; // ← Replace with your actual Render backend URL
 function toggleMenu() {
   const menu = document.getElementById("dropdownMenu");
   menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -30,7 +32,7 @@ function handleRegisterForm() {
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/newUser", {
+      const res = await fetch(`${API_BASE_URL}/api/users/newUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -58,7 +60,7 @@ function handleLoginForm() {
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/login", {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
