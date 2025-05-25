@@ -11,7 +11,12 @@ const bcrypt = require('bcrypt');
 //const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 // Secret key (isse safe jagah environment variable mein store karo)
 const JWT_SECRET = process.env.JWT_SECRET || '7b6f7cae484a1e2438f752ffbce701cd203891908d22406dbefc7e2127046d06';
+if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET environmental variable is not defined");
+} else {
+    console.log(JWT_SECRET);
 
+}
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(" ")[1]; // Format: Bearer <token>
