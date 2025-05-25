@@ -4,6 +4,25 @@ const path = require('path');
 const User = require('./models/User');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+//const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+// Secret key (isse safe jagah environment variable mein store karo)
+const JWT_SECRET = process.env.JWT_SECRET || '7b6f7cae484a1e2438f752ffbce701cd203891908d22406dbefc7e2127046d06';
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(" ")[1]; // Format: Bearer <token>
+
+    if (!token) return res.sendStatus(401);
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user; // you can access user info in next middlewares
+        next();
+    });
+}
 
 
 const app = express();
@@ -62,46 +81,90 @@ app.get('/api/users/:id', async (req, res) => {
 // Create Account
 app.post('/api/users/newUser', async (req, res) => {
     try {
-        const newUser = req.body;
 
-        const exists = await User.findOne({ email: newUser.email });
-        if (exists) {
-            return res.status(409).json({ message: "User already exists with this email." }); // 409 = Conflict
+        const {
+            first_name,
+            last_name,
+            email,
+            password,
+            gender,
+            phone,
+            address
+        } = req.body;
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: "User already exists." });
         }
+        // ✅ Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create(newUser);
-        return res.status(201).json({
-            message: `New user with email ${newUser.email} has been created.`,
-            user: newUser
+        // ✅ Save user with hashed password
+        const newUser = new User({
+            first_name,
+            last_name,
+            email,
+            password: hashedPassword,
+            gender,
+            phone,
+            address
         });
+        await newUser.save();
+        res.status(201).json({ message: "User registered successfully." });
+
     } catch (err) {
-        return res.status(500).send("Server error : " + err);
+        res.status(500).json({ message: "Registration failed", error: err.message });
     }
 });
 // LOGIN
+
+
 app.post('/api/users/login', async (req, res) => {
-    console.log("BODY:", req.body);
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email, password });
+        // ✅ Check if user exists by email
+        const user = await User.findOne({ email });
 
-        if (user) {
-            return res.status(200).json({
-                message: "Log in successfully. 🙂",
-                user: {
-                    id: user._id,
-                    email: user.email,
-                    name: user.first_name
-                }
-            });
+        if (!user) {
+            return res.status(401).json({ message: "Invalid email." });
         }
 
-        return res.status(409).json({ message: "User doesn't exist with this email or password." });
+        // ✅ Compare entered password with hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid  password." });
+        }
+        // JWT payload me user info daalo
+        const payload = {
+            id: user._id,
+            email: user.email,
+            name: user.first_name
+        };
+
+
+        // ✅ Create token
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
+        );
+        // ✅ Send success response
+        return res.status(200).json({
+            message: "Log in successfully. 🙂",
+            token,
+            user: payload
+        });
     } catch (err) {
-        return res.status(500).send("Server error : " + err);
+        return res.status(500).send("Server error: " + err.message);
     }
 });
+app.get('/api/profile', authenticateToken, (req, res) => {
+    res.json({ message: "You are authorized", user: req.user });
+});
+
 
 
 // Start server

@@ -1,11 +1,34 @@
 const API_BASE_URL = location.hostname === "localhost"
   ? "http://localhost:5000"
   : "https://hardware-shop-backend-pwf6.onrender.com"; // ← Replace with your actual Render backend URL
+const token = localStorage.getItem("jwtToken");
 function toggleMenu() {
   const menu = document.getElementById("dropdownMenu");
   menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  if (menu.style.display == "block") {
+    const crAcc = document.getElementById("createAccount");
+    const sign = document.getElementById("signIn");
+    const logout = document.getElementById("logOut");
+    if (token) {
+      crAcc.style.display = "none";
+      sign.style.display = "none";
+      logout.style.display = "block";
+      logout.onclick = handleLogout;
+    } else {
+      crAcc.style.display = "block";
+      sign.style.display = "block";
+      logout.style.display = "none";
+    }
+  }
 }
-
+//Optional: Click outside to hide dropdown
+window.onclick = function (event) {
+  if (!event.target.matches('.menu-btn')) {
+    if (dropdownMenu.style.display === "block") {
+      dropdownMenu.style.display = "none";
+    }
+  }
+};
 // Hide dropdown if user clicks outside
 window.onclick = function (event) {
   if (!event.target.matches('.menu-btn')) {
@@ -70,6 +93,8 @@ function handleLoginForm() {
 
       const result = await res.json();
       if (res.ok) {
+        localStorage.setItem("jwtToken", result.token);
+
         alert(result.message);
         window.location.href = "/index.html";
       } else {
@@ -80,4 +105,11 @@ function handleLoginForm() {
     }
   });
 }
+function handleLogout() {
+  localStorage.removeItem("jwtToken");
+  alert("Logged out successfully.👍");
+  location.reload();
+  //window.location.href = "/login.html";
+}
+
 
