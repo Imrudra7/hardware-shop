@@ -59,7 +59,8 @@ app.get('/api/users', async (req, res) => {
         const users = await User.find({});  // ✅ Get all documents in 'users' collection
         return res.status(200).json(users);
     } catch (err) {
-        return res.status(500).send("Server error: " + err.message);
+        return res.status(500).json({ message: "Server error: " + err.message });
+
     }
 });
 // Get user by id
@@ -75,7 +76,8 @@ app.get('/api/users/:id', async (req, res) => {
         else
             return res.status(404).send("Not Found");
     } catch (err) {
-        return res.status(500).send("Server error : " + err);
+        return res.status(500).json({ message: "Server error: " + err.message });
+
     }
 });
 // Create Account
@@ -158,7 +160,8 @@ app.post('/api/users/login', async (req, res) => {
             user: payload
         });
     } catch (err) {
-        return res.status(500).send("Server error: " + err.message);
+        return res.status(500).json({ message: "Server error: " + err.message });
+
     }
 });
 app.get('/api/profile', authenticateToken, (req, res) => {
