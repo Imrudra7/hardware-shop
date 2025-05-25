@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 // Secret key (isse safe jagah environment variable mein store karo)
 const JWT_SECRET = process.env.JWT_SECRET || '7b6f7cae484a1e2438f752ffbce701cd203891908d22406dbefc7e2127046d06';
 if (!JWT_SECRET) {
+    console.log(JWT_SECRET);
     throw new Error("JWT_SECRET environmental variable is not defined");
 } else {
     console.log(JWT_SECRET);
