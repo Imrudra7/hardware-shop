@@ -8,6 +8,7 @@
 body {
     font-family: 'Offside', sans-serif;
     line-height: 1.5;
+    width: 100vw;
 }
 
 @font-face {
@@ -18,18 +19,20 @@ body {
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 4em;
 }
 
 /* NAVBAR STYLES */
 nav {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 100vw;
 }
 
 .nav1 {
     display: flex;
+    height: 7vh;
+    width: 100vw;
     justify-content: space-between;
     align-items: center;
     background-color: #f2f2f2;
@@ -47,12 +50,14 @@ nav {
 
 .rightnav1 {
     display: flex;
+    margin: 0px 25px;
     align-items: center;
     gap: 15px;
 }
 
 .user-menu {
     display: flex;
+    margin: 0px 15px;
     align-items: center;
     gap: 10px;
     position: relative;
@@ -77,21 +82,25 @@ nav {
     min-width: 150px;
     flex-direction: column;
     z-index: 1;
+    border-radius: 5px;
 }
 
 .dropdown-content a {
     padding: 10px;
+    border-radius: 5px;
     text-decoration: none;
     color: #333;
     display: block;
 }
 
 .dropdown-content a:hover {
-    background-color: #f0f0f0;
+    background-color: #02f537;
 }
 
 .nav2 {
     display: flex;
+    height: 7vh;
+    width: 100vw;
     justify-content: space-between;
     align-items: center;
     background-color: #e4e4e4;
@@ -106,9 +115,11 @@ nav {
 }
 
 .leftnav2 .logo img {
-    height: 40px;
+    height: 20px;
     width: auto;
 }
+
+
 
 .logo {
     margin-right: 50px;

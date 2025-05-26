@@ -2,6 +2,12 @@ const API_BASE_URL = location.hostname === "localhost"
   ? "http://localhost:5000"
   : "https://hardware-shop-backend-pwf6.onrender.com"; // ← Replace with your actual Render backend URL
 const token = localStorage.getItem("jwtToken");
+document.addEventListener('DOMContentLoaded', function () {
+  if (!token) {
+    document.getElementById("authBtn").innerText = "Sign In / Create Account";
+  }
+});
+
 function toggleMenu() {
   const menu = document.getElementById("dropdownMenu");
   menu.style.display = (menu.style.display === "block") ? "none" : "block";
