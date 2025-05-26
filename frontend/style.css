@@ -1,66 +1,158 @@
-body,
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Offside', sans-serif;
+    line-height: 1.5;
+}
+
+@font-face {
+    font-family: 'Offside';
+    src: url('./fonts/Offside-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 h1 {
-    font-family: "Raleway", sans-serif
+    font-size: 4rem;
 }
 
-body,
-html {
-    height: 100%
-}
-
-.bgimg {
-    background-image: url('./images/nutsandbolts.jpg');
-    min-height: 100%;
-    background-position: center;
-    background-size: cover;
-}
-
+/* NAVBAR STYLES */
 nav {
     display: flex;
-    justify-content: center;
-    /* horizontal */
-    align-items: center;
-    /* vertical */
-    height: 10vh;
-    text-align: center;
     flex-direction: column;
+    width: 100%;
 }
 
-main {
-    color: #ffffff;
+.nav1 {
     display: flex;
-    justify-content: center;
-    /* horizontal */
+    justify-content: space-between;
     align-items: center;
-    /* vertical */
-    height: 100vh;
-    text-align: center;
-    flex-direction: column;
+    background-color: #f2f2f2;
+    padding: 10px 20px;
+    font-size: 14px;
+    flex-wrap: wrap;
 }
 
-footer {
-    min-height: 10vh;
+.leftnav1 {
     display: flex;
-    justify-content: center;
-    /* horizontal */
     align-items: center;
-    /* vertical */
-    text-align: center;
-    flex-direction: column;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-/* Register */
-.container {
-
-    min-height: 70vh;
-    /* full screen */
+.rightnav1 {
     display: flex;
-    justify-content: center;
-    /* horizontally center */
     align-items: center;
-    /* vertically center */
+    gap: 15px;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.menu-btn {
+    background-color: #333;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 150px;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.dropdown-content a:hover {
     background-color: #f0f0f0;
-    /* optional */
+}
+
+.nav2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e4e4e4;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+}
+
+.leftnav2 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.leftnav2 .logo img {
+    height: 40px;
+    width: auto;
+}
+
+.logo {
+    margin-right: 50px;
+}
+
+/* MAIN SECTION */
+.bgimg {
+    background-image: url('./images/nuts.jpg');
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.offside-regular {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+/* FOOTER */
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background-color: #ddd;
+    flex-direction: column;
+    min-height: 10vh;
+}
+
+/* FORM CONTAINER */
+.container {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
 }
 
 input {
@@ -80,58 +172,15 @@ input {
     color: #fff;
     text-shadow: 1px 1px 1px #000;
     border-radius: 10px;
-    background-color: rgb(220 0 0 / 100%);
-    background-image: linear-gradient(to top left,
-            rgb(0 0 0 / 20%),
-            rgb(0 0 0 / 20%) 30%,
-            rgb(0 0 0 / 0%));
-    box-shadow:
-        inset 2px 2px 3px rgb(255 255 255 / 60%),
-        inset -2px -2px 3px rgb(0 0 0 / 60%);
+    background-color: rgb(220 0 0);
+    background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
 }
 
 .styled:hover {
-    background-color: rgb(255 0 0 / 100%);
+    background-color: red;
 }
 
 .styled:active {
-    box-shadow:
-        inset -2px -2px 3px rgb(255 255 255 / 60%),
-        inset 2px 2px 3px rgb(0 0 0 / 60%);
-}
-
-.user-menu {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-}
-
-.menu-btn {
-    padding: 8px 12px;
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: white;
-    min-width: 160px;
-    border: 1px solid #ccc;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-.dropdown-content a {
-    display: block;
-    padding: 10px;
-    color: black;
-    text-decoration: none;
-}
-
-.dropdown-content a:hover {
-    background-color: #f0f0f0;
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
 }
