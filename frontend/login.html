@@ -6,26 +6,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LOG IN</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            color: #444839;
+            background-color: #FFFFFF;
+            max-height: 100vh;
+            width: 90vw;
+            display: flex;
+            flex-direction: column;
+            /* 👈 Important */
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        #brand {
+            height: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 5vh;
+        }
+
+        .content-wrapper {
+            padding: 25px;
+            height: 80vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex: 1;
+            flex-wrap: wrap;
+            margin: auto;
+        }
+
+
+        .login-container {
+            /* border: 4px solid #ABC1F3; */
+            background-color: white;
+            /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */
+            gap: 1rem;
+            display: flex;
+            /* justify-content: center; */
+            align-items: center;
+            flex-direction: column;
+            height: 55vh;
+            width: auto;
+            border-radius: 10px;
+        }
+
+        #emailPass {
+            padding: 10px;
+            margin: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #signBtn {
+            color: white;
+            background-color: #17347C;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #signBtn:hover {
+            background-color: #7E96D5;
+        }
+
+        img {
+            height: 60vh;
+            width: 45vw;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <div id="emailPass">
-            <h2>Sign in</h2>
-            <br />
-            <p>Sign in to access your account and Ace Rewards.</p>
-            <br />
-            <h3>Account sign in details</h3>
-            <br />
-            <form id="loginForm">
-                <input type="email" name="email" placeholder="Enter your email" autocomplete="email" required /><br />
-                <input type="password" name="password" placeholder="Enter your password" autocomplete="current-password"
-                    required /><br />
-                <input type="submit" value="Sign in" class="styled" />
-            </form>
 
+    <div id="brand">VS STEEL</div>
+    <div class="content-wrapper">
+        <div class="login-container">
+            <div id="emailPass">
+                <h2>Sign in</h2>
+                <br />
+                <p>Sign in to access your account and Ace Rewards.</p>
+                <br />
+                <h3>Account sign in details</h3>
+                <br />
+                <form id="loginForm">
+                    <input type="email" name="email" placeholder="Enter your email" autocomplete="email"
+                        required /><br />
+                    <input type="password" name="password" placeholder="Enter your password"
+                        autocomplete="current-password" required /><br />
+                    <input type="submit" value="Sign in" class="sign" id="signBtn" />
+                </form>
+
+            </div>
+            <p>Don't have an account? <a href="/register">Create one now</a></p>
         </div>
-        <p>Don't have an account? <a href="/register">Create one now</a></p>
+        <div>
+            <img src="./images/secure-mobile-app-login-user-interface-design_477639-6898.avif" alt="">
+        </div>
     </div>
     <script src="./script.js"></script>
 </body>
