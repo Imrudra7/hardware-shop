@@ -84,7 +84,7 @@ function handleRegisterForm() {
       const result = await res.json();
       if (res.ok) {
         alert(result.message);
-        window.location.href = "/login.html";
+        window.location.href = "/login";
       } else {
         alert(result.message || "Something went wrong.");
       }
@@ -120,7 +120,7 @@ function handleLoginForm() {
         localStorage.setItem("jwtToken", result.token);
 
         alert(result.message);
-        window.location.href = "/index.html";
+        window.location.href = "/";
       } else {
         alert(result.message || "Invalid login");
       }
