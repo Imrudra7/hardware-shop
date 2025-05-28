@@ -5,113 +5,164 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LOG IN</title>
-    <link rel="stylesheet" href="style.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
     <style>
+        @font-face {
+            font-family: 'Offside';
+            src: url('./fonts/Offside-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
             margin: 0;
             padding: 0;
             color: #444839;
             background-color: #FFFFFF;
-            max-height: 100vh;
-            width: 90vw;
+            min-height: 100vh;
+            min-width: 100vw;
             display: flex;
             flex-direction: column;
-            /* 👈 Important */
-            align-items: center;
-            justify-content: center;
-            gap: 10vh;
+            font-family: 'Offside', sans-serif;
         }
 
-        #brand {
-            height: 20px;
-            font-size: 5rem;
-            font-weight: bold;
-            margin-top: 5vh;
+
+
+        .brand {
+            min-width: 100vw;
+            min-height: 10vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xxx-large;
+            font-weight: bolder;
         }
 
         .content-wrapper {
-            padding: 25px;
-            height: 80vh;
-            width: 100vw;
+            min-width: 100vw;
+            min-height: 50vh;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            gap: 40px;
-            flex: 1;
-            flex-wrap: wrap;
-            margin: auto;
         }
 
 
-        .login-container {
-            /* border: 4px solid #ABC1F3; */
-            background-color: white;
-            /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */
-            gap: 1rem;
-            display: flex;
-            /* justify-content: center; */
-            align-items: center;
-            flex-direction: column;
-            height: 55vh;
-            width: auto;
-            border-radius: 10px;
-        }
 
         #emailPass {
-            padding: 10px;
-            margin: 5px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            gap: 10px;
+            padding: auto;
         }
 
-        #signBtn {
-            color: white;
-            background-color: #17347C;
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+        }
+
+        input {
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+            border-bottom: 1px solid #444839;
+            background: transparent;
+            padding: 8px 0;
+            width: 70%;
+            font-size: 1rem;
+            outline: none;
+            transition: pink 0.3s ease;
+
         }
 
-        #signBtn:hover {
+        input:focus {
+            border-bottom-color: #17347C;
+        }
+
+        input:hover {
+            border-bottom-color: #7E96D5;
+        }
+
+        .styled {
+            border: 0;
+            line-height: 2.5;
+            padding: 0 20px;
+            font-size: 1rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 1px #000;
+            border-radius: 10px;
+            background-color: #17347C;
+            background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+            box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+            margin-top: 5px;
+
+        }
+
+        .styled:hover {
             background-color: #7E96D5;
+            cursor: pointer;
         }
 
-        img {
-            height: 60vh;
-            width: 45vw;
+        .styled:active {
+            box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        @media screen and (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            #emailPass,
+            form {
+                width: 100%;
+                align-items: center;
+                text-align: center;
+            }
+
+            input {
+                width: 80%;
+            }
+
+            img {
+                width: 80%;
+                height: auto;
+                margin-top: 20px;
+            }
+
+            .brand {
+                font-size: xx-large;
+                padding: 10px 0;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="brand">VS STEEL</div>
+    <div class="brand">VS STEEL</div>
     <div class="content-wrapper">
-        <div class="login-container">
-            <div id="emailPass">
-                <h2>Sign in</h2>
-                <br />
-                <p>Sign in to access your account and Ace Rewards.</p>
-                <br />
-                <h3>Account sign in details</h3>
-                <br />
-                <form id="loginForm">
-                    <input type="email" name="email" placeholder="Enter your email" autocomplete="email"
-                        required /><br />
-                    <input type="password" name="password" placeholder="Enter your password"
-                        autocomplete="current-password" required /><br />
-                    <input type="submit" value="Sign in" class="sign" id="signBtn" />
-                </form>
 
-            </div>
+        <div id="emailPass">
+            <h2>Sign in</h2>
+
+            <p>Sign in to access your account and Ace Rewards.</p>
+
+            <h3>Account sign in details</h3>
+
+            <form id="loginForm">
+                <input type="email" name="email" placeholder="Enter your email" autocomplete="email" required />
+                <input type="password" name="password" placeholder="Enter your password" autocomplete="current-password"
+                    required />
+                <input type="submit" value="Sign in" class="styled" id="signBtn" />
+            </form>
             <p>Don't have an account? <a href="/register">Create one now</a></p>
         </div>
-        <div>
-            <img src="./images/secure-mobile-app-login-user-interface-design_477639-6898.avif" alt="">
-        </div>
+
+
+
+        <img src="./images/secure-mobile-app-login-user-interface-design_477639-6898.avif" alt="">
+
     </div>
     <script src="./script.js"></script>
 </body>

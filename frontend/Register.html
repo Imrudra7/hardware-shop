@@ -5,49 +5,180 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register</title>
-  <link rel="stylesheet" href="style.css" />
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <style>
+    @font-face {
+      font-family: 'Offside';
+      src: url('./fonts/Offside-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      color: #444839;
+      background-color: #FFFFFF;
+      min-height: 100vh;
+      min-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Offside', sans-serif;
+    }
+
+
+
+    .brand {
+      min-width: 100vw;
+      min-height: 10vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: xxx-large;
+      font-weight: bolder;
+    }
+
+    .container {
+      min-width: 100vw;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #registerForm {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 40px;
+    }
+
+    #emailPass {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #444839;
+      background: transparent;
+      padding: 8px 0;
+      width: 70%;
+      font-size: 1rem;
+      outline: none;
+      transition: pink 0.3s ease;
+
+    }
+
+    input:focus {
+      border-bottom-color: #17347C;
+    }
+
+    input:hover {
+      border-bottom-color: #7E96D5;
+    }
+
+    .styled {
+      border: 0;
+      line-height: 2.5;
+      padding: 0 20px;
+      font-size: 1rem;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 1px #000;
+      border-radius: 10px;
+      background-color: #17347C;
+      background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+      box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+      margin-top: 5px;
+
+    }
+
+    .styled:hover {
+      background-color: #7E96D5;
+      cursor: pointer;
+    }
+
+    .styled:active {
+      box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      #registerForm {
+        width: 100%;
+        margin: 0;
+        align-items: center;
+        text-align: center;
+      }
+
+      #emailPass {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+      }
+
+      input {
+        width: 80%;
+      }
+
+      .brand {
+        font-size: xx-large;
+        padding: 10px 0;
+      }
+
+      img {
+        width: 80%;
+        height: auto;
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <div class="brand">VS STEEL</div>
+
   <div class="container">
+
     <form id="registerForm">
+
       <div id="emailPass">
         <h2>Create an account</h2>
-        <br />
-        <p>
+        <span>
           Create a new online account and join The HardWARE Shop or link
           accounts (joining or linking is optional).
-        </p>
-        <br />
+        </span>
         <h3>Account sign in details</h3>
-        <br />
-        <input type="email" name="email" placeholder="Enter your email" required /><br />
-        <input type="password" name="password" placeholder="Create a password" required /><br />
+        <input type="email" name="email" placeholder="Enter your email" required />
+        <input type="password" name="password" placeholder="Create a password" required />
+
+        <input type="text" name="first_name" placeholder="First Name" required />
+        <input type="text" name="last_name" placeholder="Last Name" required />
+        <input type="text" name="address" placeholder="Address" required />
+        <input type="text" name="mobile" placeholder="Phone Number" required pattern="\d{10}" maxlength="10"
+          oninput="this.value = this.value.replace(/\D/g, '')" required />
+
+
+        <input type="submit" value="Create Account" class="styled" />
+        <p>Already have an account? <a href="/login">Sign in here</a></p>
       </div>
-
-      <div class="aboutyou">
-        <input type="text" name="first_name" placeholder="First Name" /><br />
-        <input type="text" name="last_name" placeholder="Last Name" /><br />
-
-        <label for="gender">Gender</label>
-        <select id="gender" name="gender">
-          <option value="" disabled selected>Select type</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select><br />
-
-        <input type="text" name="address" placeholder="Address" /><br />
-        <input type="text" name="mobile" placeholder="Phone Number" /><br />
-
-        <label for="birthday">Birthday Month:</label>
-        <input type="month" id="birthday" name="dob" /><br />
-      </div>
-
-      <input type="submit" value="Create Account" class="styled" />
     </form>
 
-    <p>Already have an account? <a href="/login">Sign in here</a></p>
+    <img src="./images/secure-mobile-app-login-user-interface-design_477639-6898.avif" alt="Register Image">
+
   </div>
 
   <script src="./script.js"></script>
