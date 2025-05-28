@@ -7,6 +7,17 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("authBtn").innerText = "Sign In / Create Account";
   }
 });
+const loader = document.getElementById("loader");
+
+function showLoader() {
+  if (loader)
+    loader.style.display = "flex";
+}
+
+function hideLoader() {
+  if (loader)
+    loader.style.display = "none";
+}
 
 function toggleMenu() {
   const menu = document.getElementById("dropdownMenu");
@@ -58,6 +69,7 @@ function handleRegisterForm() {
   const form = document.getElementById("registerForm");
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    showLoader();
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
@@ -78,6 +90,8 @@ function handleRegisterForm() {
       }
     } catch (err) {
       alert("Failed to register: " + err.message);
+    } finally {
+      hideLoader();
     }
   });
 }
@@ -86,9 +100,10 @@ function handleLoginForm() {
   const form = document.getElementById("loginForm");
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    showLoader();
     const data = Object.fromEntries(new FormData(form).entries());
-    const loader = document.getElementById("loader");
-    loader.style.display = "block"; // Show loader
+
+
 
 
     try {
@@ -112,13 +127,15 @@ function handleLoginForm() {
     } catch (err) {
       alert("Login failed: " + err.message);
     } finally {
-      loader.style.display = "none"; // Hide loader
+      hideLoader();
     }
   });
 }
 function handleLogout() {
+  showLoader();
   localStorage.removeItem("jwtToken");
   alert("Logged out successfully.👍");
+  hideLoader();
   location.reload();
   //window.location.href = "/login.html";
 }
