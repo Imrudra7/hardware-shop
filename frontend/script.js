@@ -87,6 +87,9 @@ function handleLoginForm() {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form).entries());
+    const loader = document.getElementById("loader");
+    loader.style.display = "block"; // Show loader
+
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/users/login`, {
@@ -108,6 +111,8 @@ function handleLoginForm() {
       }
     } catch (err) {
       alert("Login failed: " + err.message);
+    } finally {
+      loader.style.display = "none"; // Hide loader
     }
   });
 }
