@@ -3,6 +3,9 @@ const express = require('express');
 const connectDB = require('./db');
 const path = require('path');
 const User = require('./models/User');
+const Product = require('./models/Product');
+const productRoutes = require("./routes/productRoutes");
+
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -35,7 +38,7 @@ function authenticateToken(req, res, next) {
 const app = express();
 app.use(express.json());
 app.use(cors()); // ⬅️ Allow frontend to access backend
-
+app.use(productRoutes);
 connectDB();
 
 const PORT = process.env.PORT || 5000;
@@ -48,6 +51,8 @@ const PORT = process.env.PORT || 5000;
 
 // Serve frontend from ../frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/uploads', express.static('uploads'));
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        form>div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .dimensions-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .dimensions-group>div {
+            flex: 1;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background-color: #2a74da;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #205bb5;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Add New Product</h1>
+    <form id="addProductForm" enctype="multipart/form-data" method="POST" action="/admin/addproduct">
+        <div>
+            <label for="category">Category *</label>
+            <select name="category" id="category" required>
+                <option value="">-- Select Category --</option>
+                <option value="Steel">Steel</option>
+                <option value="Aluminium">Aluminium</option>
+                <option value="UPVC">UPVC Fiber</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="subCategory">Sub Category *</label>
+            <select name="subCategory" id="subCategory" required>
+                <option value="">-- Select Sub Category --</option>
+                <!-- Sub-category options will be filtered by JS -->
+            </select>
+        </div>
+        <div>
+            <label for="name">Product Name *</label>
+            <input type="text" id="name" name="name" placeholder="Enter product name" required />
+        </div>
+
+        <div>
+            <label for="description">Description *</label>
+            <textarea id="description" name="description" placeholder="Enter product description" required></textarea>
+        </div>
+
+        <div>
+            <label for="price">Price (₹) *</label>
+            <input type="number" id="price" name="price" min="0" step="0.01" required />
+        </div>
+
+        <div>
+            <label for="size">Size (optional)</label>
+            <input type="text" id="size" name="size" placeholder="Optional, e.g. Medium, Large" />
+        </div>
+
+        <div>
+            <label for="weight">Weight (kg) *</label>
+            <input type="number" id="weight" name="weight" min="0" step="0.01" required />
+        </div>
+
+        <div>
+            <label>Dimensions (in units) *</label>
+            <div class="dimensions-group">
+                <div>
+                    <label for="length">Length</label>
+                    <input type="number" id="length" name="length" min="0" step="0.01" required />
+                </div>
+                <div>
+                    <label for="breadth">Breadth</label>
+                    <input type="number" id="breadth" name="breadth" min="0" step="0.01" required />
+                </div>
+                <div>
+                    <label for="height">Height</label>
+                    <input type="number" id="height" name="height" min="0" step="0.01" required />
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label for="material">Material (optional)</label>
+            <input type="text" id="material" name="material" placeholder="Optional" />
+        </div>
+
+        <div>
+            <label for="color">Color (optional)</label>
+            <input type="text" id="color" name="color" placeholder="Optional" />
+        </div>
+
+
+
+
+
+        <div>
+            <label for="productImage">Product Image *</label>
+            <input type="file" id="productImage" name="image" accept="image/*" required />
+
+        </div>
+
+        <div>
+            <label for="quantityInStock">Quantity In Stock *</label>
+            <input type="number" id="quantityInStock" name="quantityInStock" min="0" required />
+        </div>
+
+        <div>
+            <label for="sold">Quantity Sold *</label>
+            <input type="number" id="sold" name="sold" min="0" required />
+        </div>
+
+        <div>
+            <label for="available">Available? *</label>
+            <select id="available" name="available" required>
+                <option value="">-- Select --</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+        </div>
+
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+        const subCategories = {
+            Steel: [
+                "Gate Grill",
+                "Window Grill",
+                "Stair Railing",
+                "Roof Railing",
+                "Jhoola",
+                "Extra as per Order"
+            ],
+            Aluminium: [
+                "Sliding Windows",
+                "Open Palla Window",
+                "Aluminium Doors",
+                "Room Partition"
+            ],
+            UPVC: [
+                "UPVC Sliding Windows",
+                "UPVC Open Palla Window",
+                "UPVC Doors",
+                "UPVC Room Partition"
+            ]
+        };
+
+        const categorySelect = document.getElementById("category");
+        const subCategorySelect = document.getElementById("subCategory");
+
+        categorySelect.addEventListener("change", () => {
+            const selectedCat = categorySelect.value;
+            subCategorySelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
+            if (selectedCat && subCategories[selectedCat]) {
+                subCategories[selectedCat].forEach(subCat => {
+                    const option = document.createElement("option");
+                    option.value = subCat.toLowerCase().replace(/\s+/g, "-");
+                    option.textContent = subCat;
+                    subCategorySelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+    <script src="./script.js"></script>
+</body>
+
+</html>

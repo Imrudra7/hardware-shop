@@ -55,6 +55,7 @@ window.onclick = function (event) {
     }
   }
 }
+console.log("addProductFOrm");
 document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("registerForm")) {
     handleRegisterForm();
@@ -62,6 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (document.getElementById("loginForm")) {
     handleLoginForm();
+  }
+  if (document.getElementById("addProductForm")) {
+    handleProductForm();
   }
 });
 
@@ -131,6 +135,40 @@ function handleLoginForm() {
     }
   });
 }
+function handleProductForm() {
+  console.log("handleProduct called.");
+
+  const form = document.getElementById("addProductForm");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    showLoader();
+
+    const formData = new FormData(form); // auto handles file input
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/addproduct`, {
+        method: "POST",
+        body: formData // no need to set headers here
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert(result.message || "Product added successfully!");
+        form.reset(); // reset form after success
+      } else {
+        alert(result.error || "Failed to add product.");
+      }
+    } catch (err) {
+      hideLoader();
+      alert("Request failed: " + err.message);
+    } finally {
+      hideLoader();
+    }
+  });
+}
+
 function handleLogout() {
   showLoader();
   localStorage.removeItem("jwtToken");
