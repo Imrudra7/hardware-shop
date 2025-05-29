@@ -71,12 +71,47 @@
         button:hover {
             background-color: #205bb5;
         }
+
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+            /* Hide by default */
+        }
+
+        .loader-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #17347C;
+            /* Dark blue spinner color */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
     <h1>Add New Product</h1>
-    <form id="addProductForm" enctype="multipart/form-data" method="POST" action="/admin/addproduct">
+    <form id="addProductForm" enctype="multipart/form-data">
         <div>
             <label for="category">Category *</label>
             <select name="category" id="category" required>
@@ -179,7 +214,9 @@
 
         <button type="submit">Add Product</button>
     </form>
-
+    <div id="loader" class="loader-container">
+        <div class="loader-spinner"></div>
+    </div>
     <script>
         const subCategories = {
             Steel: [
@@ -219,6 +256,7 @@
                 });
             }
         });
+
     </script>
     <script src="./script.js"></script>
 </body>

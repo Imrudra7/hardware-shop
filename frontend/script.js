@@ -55,7 +55,7 @@ window.onclick = function (event) {
     }
   }
 }
-console.log("addProductFOrm");
+
 document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("registerForm")) {
     handleRegisterForm();
@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     handleLoginForm();
   }
   if (document.getElementById("addProductForm")) {
+    console.log("addProductFOrm");
     handleProductForm();
   }
 });
@@ -145,19 +146,33 @@ function handleProductForm() {
     showLoader();
 
     const formData = new FormData(form); // auto handles file input
+    console.log(formData);
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/addproduct`, {
         method: "POST",
+        headers: {
+          "authorization": `Bearer ${token}`,
+          // "Content-Type": "multipart/form-data",  // Don't set this manually when using FormData
+        },
         body: formData // no need to set headers here
       });
 
       const result = await res.json();
+      console.log("Server Response:", res.status);
+      console.log("Response JSON:", result);
+      console.log(res.json);
 
       if (res.ok) {
-        alert(result.message || "Product added successfully!");
+        console.log(res);
+        console.log(res.status);
+
+
+        alert(res.json.message || "Product added successfully!");
         form.reset(); // reset form after success
       } else {
+        console.log(result);
+
         alert(result.error || "Failed to add product.");
       }
     } catch (err) {
@@ -177,5 +192,3 @@ function handleLogout() {
   location.reload();
   //window.location.href = "/login.html";
 }
-
-

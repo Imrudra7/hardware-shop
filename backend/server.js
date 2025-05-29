@@ -23,16 +23,33 @@ if (!JWT_SECRET) {
 }
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(" ")[1]; // Format: Bearer <token>
+    console.log("Auth Header received:", authHeader);
 
-    if (!token) return res.sendStatus(401);
+    if (!authHeader) {
+        console.log("No Authorization header present! URL:", req.originalUrl);
+        return res.status(401).json({ message: "Access token missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+        console.log("Token missing in Authorization header! URL:", req.originalUrl);
+        return res.status(401).json({ message: "Access token missing" });
+    }
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user; // you can access user info in next middlewares
+        if (err) {
+            console.error("JWT verification error:", err);
+            return res.status(403).json({ message: "Invalid or expired token" });
+        }
+
+        console.log("Token verified, user:", user);
+        req.user = user;
         next();
     });
 }
+
+
+
 
 
 const app = express();
@@ -46,6 +63,13 @@ const PORT = process.env.PORT || 5000;
 
 
 
+function isAdmin(req, res, next) {
+    if (req.user && req.user.role === 'admin') {
+        next(); // ✅ allowed
+    } else {
+        return res.status(403).json({ message: "Access denied: Admins only 🚫" });
+    }
+}
 
 
 
@@ -65,6 +89,41 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'register.html'));
 });
+// app.get('/admin-dashboard', authenticateToken, isAdmin, (req, res) => {
+//     return res.sendFile(path.join(__dirname, '../frontend/admin/admin-dashboard.html'));
+// });
+// This should be in app.js or routes file where static files are served
+app.get("/admin-dashboard", (req, res) => {
+    const token = req.query.token;
+    if (!token) {
+        return res.status(401).send("Unauthorized: No token");
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err || decoded.role !== "admin") {
+            return res.status(403).send("Forbidden: Invalid admin");
+        }
+
+        return res.sendFile(path.join(__dirname, "../frontend/admin/admin-dashboard.html"));
+    });
+});
+app.get("/addProduct", (req, res) => {
+    const token = req.query.token;
+    if (!token) {
+        return res.status(401).send("Unauthorized: No token");
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err || decoded.role !== "admin") {
+            return res.status(403).send("Forbidden: Invalid admin");
+        }
+
+        return res.sendFile(path.join(__dirname, '../frontend/admin/addProduct.html'));
+    });
+});
+// app.get('/addProduct', authenticateToken, isAdmin, (req, res) => {
+//     return res.sendFile(path.join(__dirname, '../frontend/admin/addProduct.html'));
+// });
 // GET ALL USERS
 app.get('/api/users', async (req, res) => {
     try {
@@ -92,11 +151,9 @@ app.get('/api/users/:id', async (req, res) => {
 
     }
 });
-// Create Account
 app.post('/api/users/newUser', async (req, res) => {
     try {
-
-        const {
+        let {
             first_name,
             last_name,
             email,
@@ -106,66 +163,77 @@ app.post('/api/users/newUser', async (req, res) => {
             address
         } = req.body;
 
-        // Check if user already exists
+        if (!first_name || !last_name || !email || !password) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
+
+        first_name = first_name.trim();
+        last_name = last_name.trim();
+        email = email.trim().toLowerCase();
+        gender = gender?.trim();
+        address = address?.trim();
+        const mobile = phone?.trim(); // ✅ Correct assignment
+
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(409).json({ message: "User already exists." });
+            return res.status(409).json({ message: "User with this email already exists." });
         }
-        // ✅ Hash the password
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // ✅ Save user with hashed password
         const newUser = new User({
             first_name,
             last_name,
             email,
             password: hashedPassword,
             gender,
-            phone,
+            mobile,
             address
         });
+
         await newUser.save();
-        res.status(201).json({ message: "User registered successfully." });
+
+        return res.status(201).json({ message: "User registered successfully." });
 
     } catch (err) {
-        res.status(500).json({ message: "Registration failed", error: err.message });
+        console.error("User registration error:", err);
+        return res.status(500).json({ message: "Registration failed", error: err.message });
     }
 });
-// LOGIN
 
+// LOGIN
 
 app.post('/api/users/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body;  // <-- here, change dbEmail to email
 
-        // ✅ Check if user exists by email
-        const user = await User.findOne({ email });
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+
+        const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
             return res.status(401).json({ message: "Invalid email." });
         }
 
-        // ✅ Compare entered password with hashed password
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid  password." });
+            return res.status(401).json({ message: "Invalid password." });
         }
-        // JWT payload me user info daalo
+
         const payload = {
             id: user._id,
             email: user.email,
+            role: user.role,
             name: user.first_name
         };
 
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' });
 
-        // ✅ Create token
-        const token = jwt.sign(
-            { userId: user._id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
-        // ✅ Send success response
         return res.status(200).json({
             message: "Log in successfully. 🙂",
             token,
@@ -173,11 +241,11 @@ app.post('/api/users/login', async (req, res) => {
         });
     } catch (err) {
         return res.status(500).json({ message: "Server error: " + err.message });
-
     }
 });
+
 app.get('/api/profile', authenticateToken, (req, res) => {
-    res.json({ message: "You are authorized", user: req.user });
+    return res.json({ message: "You are authorized", user: req.user });
 });
 
 

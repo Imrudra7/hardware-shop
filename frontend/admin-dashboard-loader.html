@@ -1,0 +1,38 @@
+<!-- /frontend/admin/admin-dashboard-loader.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Loading Admin Dashboard...</title>
+</head>
+
+<body>
+    <h2>Verifying admin...</h2>
+    <script>
+        const token = localStorage.getItem("jwtToken");
+
+        if (!token) {
+            window.location.href = "/login";
+        } else {
+            fetch("/api/verify-admin", {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            })
+                .then((res) => {
+                    if (res.status === 200) {
+                        window.location.href = `/admin-dashboard?token=${token}`;
+                    } else {
+                        window.location.href = "/unauthorized";
+                    }
+                })
+                .catch(() => {
+                    window.location.href = "/login";
+                });
+        }
+    </script>
+</body>
+
+</html>

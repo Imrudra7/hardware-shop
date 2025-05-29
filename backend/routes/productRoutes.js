@@ -4,6 +4,30 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Product = require('../models/Product');
+const app = express();
+const cors = require('cors');
+app.use(cors());
+const jwt = require("jsonwebtoken");
+
+// Middleware to verify token and admin role
+const verifyAdmin = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) return res.status(401).json({ success: false, message: "Access token missing" });
+
+    const token = authHeader.split(" ")[1];
+    if (!token) return res.status(401).json({ success: false, message: "Access token missing" });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT_SECRET must be set in env
+        if (decoded.role !== "admin") {
+            return res.status(403).json({ success: false, message: "Access denied: Admins only" });
+        }
+        req.user = decoded; // attach user info to request object
+        next();
+    } catch (err) {
+        return res.status(403).json({ success: false, message: "Invalid or expired token" });
+    }
+};
 
 // Multer storage setup
 const storage = multer.diskStorage({
@@ -36,7 +60,7 @@ const deleteUploadedFile = (filename) => {
 };
 
 // Add Product Endpoint with image upload
-router.post("/api/addproduct", upload.single("image"), async (req, res) => {
+router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, res) => {
 
     const BASE_URL = `${req.protocol}://${req.get("host")}`;
 
@@ -107,6 +131,23 @@ router.post("/api/addproduct", upload.single("image"), async (req, res) => {
         if (uploadedFileName) deleteUploadedFile(uploadedFileName);
         res.status(500).json({ success: false, error: error.message });
     }
+});
+// In routes/middleware or routes/admin.js or wherever
+//const jwt = require("jsonwebtoken");
+
+router.get("/api/verify-admin", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ success: false, message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err || decoded.role !== "admin") {
+            return res.status(403).json({ success: false, message: "Unauthorized" });
+        }
+        return res.status(200).json({ success: true, message: "Admin verified" });
+    });
 });
 
 module.exports = router;
