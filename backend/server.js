@@ -134,23 +134,23 @@ app.get('/api/users', async (req, res) => {
 
     }
 });
-// Get user by id
-app.get('/api/users/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        // if (!mongoose.Types.ObjectId.isValid(id)) {
-        //     return res.status(400).send("Invalid user ID format.");
-        // }
-        const found = await User.find({ id: id });
-        if (found)
-            return res.status(200).json(found);
-        else
-            return res.status(404).send("Not Found");
-    } catch (err) {
-        return res.status(500).json({ message: "Server error: " + err.message });
+// // Get user by id
+// app.get('/api/users/:id', async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         // if (!mongoose.Types.ObjectId.isValid(id)) {
+//         //     return res.status(400).send("Invalid user ID format.");
+//         // }
+//         const found = await User.find({ id: id });
+//         if (found)
+//             return res.status(200).json(found);
+//         else
+//             return res.status(404).send("Not Found");
+//     } catch (err) {
+//         return res.status(500).json({ message: "Server error: " + err.message });
 
-    }
-});
+//     }
+// });
 app.post('/api/users/newUser', async (req, res) => {
     try {
         let {
