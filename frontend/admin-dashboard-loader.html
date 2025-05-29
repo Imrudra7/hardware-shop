@@ -25,7 +25,7 @@
                 },
             })
                 .then((res) => {
-                    console(res.status);
+                    console.log(res.status);
                     if (res.status === 200) {
                         window.location.href = `/admin-dashboard?token=${token}`;
                     } else {
