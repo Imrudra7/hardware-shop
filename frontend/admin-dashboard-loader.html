@@ -29,7 +29,9 @@
                         window.location.href = "/unauthorized";
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log(error);
+
                     window.location.href = "/login";
                 });
         }
