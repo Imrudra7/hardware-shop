@@ -87,7 +87,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'register.html'));
+    res.sendFile(path.join(__dirname, '../frontend', 'Register.html'));
 });
 // app.get('/admin-dashboard', authenticateToken, isAdmin, (req, res) => {
 //     return res.sendFile(path.join(__dirname, '../frontend/admin/admin-dashboard.html'));
