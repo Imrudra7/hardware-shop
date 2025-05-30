@@ -27,7 +27,7 @@
                 .then((res) => {
                     console.log(res.status);
                     if (res.status === 200) {
-                        window.location.href = `${API_BASE_URL}/admin-dashboard?token=${token}`;
+                        window.location.href = `/admin-dashboard?token=${token}`;
                     } else {
                         window.location.href = "/unauthorized";
                     }
