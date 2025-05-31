@@ -89,6 +89,16 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'Register.html'));
 });
+
+app.get('/products/steel', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/steel.html'));
+});
+app.get('/products/aluminium', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/aluminium.html'));
+});
+app.get('/products/upvc', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/upvc.html'));
+});
 // app.get('/admin-dashboard', authenticateToken, isAdmin, (req, res) => {
 //     return res.sendFile(path.join(__dirname, '../frontend/admin/admin-dashboard.html'));
 // });

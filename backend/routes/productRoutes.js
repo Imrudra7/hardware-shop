@@ -4,10 +4,10 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Product = require('../models/Product');
-const app = express();
-const cors = require('cors');
-app.use(cors());
 const jwt = require("jsonwebtoken");
+const { storage } = require("../config/cloudinary");   // 👈 just imported
+const upload = multer({ storage });                // 👈 diskStorage हट गया
+
 
 // Middleware to verify token and admin role
 const verifyAdmin = (req, res, next) => {
@@ -29,16 +29,16 @@ const verifyAdmin = (req, res, next) => {
     }
 };
 
-// Multer storage setup
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/ProductImages");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    },
-});
-const upload = multer({ storage });
+// // Multer storage setup
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, "uploads/ProductImages");
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     },
+// });
+//const upload = multer({ storage });
 
 // Helper to auto-generate productId
 const generateProductId = (category, subCategory, productName) => {
@@ -52,19 +52,19 @@ const generateProductId = (category, subCategory, productName) => {
 // const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
 // ✅ Helper to delete uploaded file if needed
-const deleteUploadedFile = (filename) => {
-    const filePath = path.join(__dirname, "../uploads/ProductImages", filename);
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-    }
-};
+// const deleteUploadedFile = (filename) => {
+//     const filePath = path.join(__dirname, "../uploads/ProductImages", filename);
+//     if (fs.existsSync(filePath)) {
+//         fs.unlinkSync(filePath);
+//     }
+// };
 
 // Add Product Endpoint with image upload
 router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, res) => {
 
-    const BASE_URL = `${req.protocol}://${req.get("host")}`;
+    //const BASE_URL = `${req.protocol}://${req.get("host")}`;
 
-    const uploadedFileName = req.file?.filename;
+    //const uploadedFileName = req.file?.filename;
 
     try {
         const {
@@ -86,17 +86,30 @@ router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, 
             available,
         } = req.body;
 
-        // ✅ Basic validation
+        // // ✅ Basic validation
+        // if (!name || !category || !subCategory || !price || !quantityInStock) {
+        //     if (uploadedFileName) deleteUploadedFile(uploadedFileName);
+        //     return res.status(400).json({ success: false, error: "Missing required fields" });
+        // }
         if (!name || !category || !subCategory || !price || !quantityInStock) {
-            if (uploadedFileName) deleteUploadedFile(uploadedFileName);
             return res.status(400).json({ success: false, error: "Missing required fields" });
         }
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: "Image upload failed or image missing" });
+        }
+        if (req.file) {
+            console.log("Uploaded to Cloudinary:", req.file.path);
+        }
+
 
         const productId = generateProductId(category, subCategory, name);
 
-        const imageUrl = req.file
-            ? `${BASE_URL}/uploads/ProductImages/${uploadedFileName}`
-            : null;
+        //const imageUrl = req.file.path;
+        // ? `${BASE_URL}/uploads/ProductImages/${uploadedFileName}`
+        // : null;
+        const imageUrl = req.file ? req.file.path : null;
+        const imagePublicId = req.file ? req.file.filename : null;
+
 
 
 
@@ -117,6 +130,7 @@ router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, 
             material: material || null,
             color: color || null,
             imageUrl,
+            imagePublicId,
             imageAlt: imageAlt || `${name} - ${category} ${subCategory}`,
 
             quantityInStock: Number(quantityInStock),
@@ -125,10 +139,11 @@ router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, 
         });
 
         await newProduct.save();
+
         res.status(201).json({ success: true, message: "Product added", productId });
 
     } catch (error) {
-        if (uploadedFileName) deleteUploadedFile(uploadedFileName);
+        // if (uploadedFileName) deleteUploadedFile(uploadedFileName);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -149,5 +164,15 @@ router.get("/api/verify-admin", (req, res) => {
         return res.status(200).json({ success: true, message: "Admin verified" });
     });
 });
+router.get("/api/products", async (req, res) => {
+    const category = req.query.category;
+    try {
+        const products = await Product.find({ category });
+        res.json({ success: true, products });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 
 module.exports = router;
