@@ -6,7 +6,7 @@ const User = require('./models/User');
 const Product = require('./models/Product');
 const productRoutes = require("./routes/productRoutes");
 
-const mongoose = require('mongoose');
+
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -98,6 +98,9 @@ app.get('/products/aluminium', (req, res) => {
 });
 app.get('/products/upvc', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/upvc.html'));
+});
+app.get('/api/product/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/product.html'));
 });
 // app.get('/admin-dashboard', authenticateToken, isAdmin, (req, res) => {
 //     return res.sendFile(path.join(__dirname, '../frontend/admin/admin-dashboard.html'));

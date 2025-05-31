@@ -227,6 +227,39 @@
                 width: 100%;
             }
         }
+
+        .product-card {
+            max-width: 600px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .product-card h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .product-card p {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -355,6 +388,9 @@
                             <h3>${product.name}</h3> 
                             <p>₹${product.price}</p>
                         `;
+                        card.addEventListener("click", () => {
+                            window.location.href = `/api/product/${product._id}`;
+                        });
                         productList.appendChild(card);
                     });
                 }
