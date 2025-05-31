@@ -141,11 +141,11 @@ router.post("/api/addproduct", verifyAdmin, upload.single("image"), async (req, 
 
         await newProduct.save();
 
-        res.status(201).json({ success: true, message: "Product added", productId });
+        return res.status(201).json({ success: true, message: "Product added", productId });
 
     } catch (error) {
         // if (uploadedFileName) deleteUploadedFile(uploadedFileName);
-        res.status(500).json({ success: false, error: error.message });
+        return res.status(500).json({ success: false, error: error.message });
     }
 });
 // In routes/middleware or routes/admin.js or wherever
