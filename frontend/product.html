@@ -122,18 +122,20 @@
         /*------------------------------------------------------*/
 
         main {
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            min-height: 800px
+            min-height: 800px;
+            padding-bottom: 55px
         }
 
         .product-container {
-            min-height: 700px;
+            min-height: 600px;
             display: flex;
             flex-wrap: wrap;
             /* justify-content: space-around; */
-            align-items: center;
+            /* align-items: center; */
             gap: 50px;
         }
 
@@ -152,11 +154,85 @@
         }
 
         .product-details {
+            box-sizing: border-box;
             width: 500px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
             font-size: 20px;
+        }
+
+        .product-name {
+            font-size: 40px;
+        }
+
+        .product-price {
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            min-height: 25px;
+            gap: 50px;
+        }
+
+        .btn {
+            min-width: 230px;
+            min-height: 70px;
+            border: none;
+            border-radius: 10px 10px;
+            font-size: large;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* smooth transition */
+            transform: scale(1);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            /* slight zoom on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            /* soft shadow glow */
+            opacity: 0.95;
+        }
+
+        #add {
+            background-color: blue;
+            color: white;
+            box-shadow: 5px blue;
+        }
+
+        #buy {
+            background-color: green;
+            color: white;
+            box-shadow: 5px green;
+        }
+
+        #add:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 255, 0.4);
+        }
+
+        #buy:hover {
+            box-shadow: 0 8px 20px rgba(0, 128, 0, 0.4);
+        }
+
+        /* Click effect */
+        .btn:active {
+            transform: scale(0.97);
+            /* thoda dab gaya jaisa feel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* shadow thoda kam */
+        }
+
+        #add:active {
+            box-shadow: 0 4px 10px rgba(0, 0, 255, 0.3);
+        }
+
+        #buy:active {
+            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.3);
         }
 
         .footer {
@@ -281,7 +357,18 @@
             alert("Logged out successfully.👍");
             location.reload();
         }
+        function addCart() {
+            if (!token) {
+                alert("Please Login first.");
+                localStorage.setItem("redirectAfterLogin", window.location.href);
+                window.location.href = "/login";
+            } else {
 
+            }
+        }
+        function buyNow() {
+
+        }
         const API_BASE_URL = location.hostname === "localhost"
             ? "http://localhost:5000"
             : "https://hardware-shop-backend-pwf6.onrender.com";
@@ -298,7 +385,7 @@
                 }
                 const {
                     name, imageUrl, imageAlt, description, price, size, weight,
-                    dimensions, material, color, quantityInStock, sold, available
+                    dimensions, material, color, sold, available
                 } = product;
 
                 const dimensionText = dimensions ? `${dimensions.length} x ${dimensions.breadth} x ${dimensions.height}` : "N/A";
@@ -316,11 +403,15 @@
                                 ${weight ? `<p><strong>Weight:</strong> ${weight} kg</p>` : ""}
                                 ${material ? `<p><strong>Material:</strong> ${material}</p>` : ""}
                                 ${color ? `<p><strong>Color:</strong> ${color}</p>` : ""}            
-                                <p><strong>Dimensions:</strong> ${dimensionText} (L × B × H)</p>
-                                <p><strong>Available Stock:</strong> ${quantityInStock}</p>
+                                <p><strong>Dimensions:</strong> ${dimensionText} (L × B × H)</p>                               
                                 <p><strong>Sold:</strong> ${sold}</p>
-                                <p><strong>Status:</strong> ${available ? "In Stock ✅" : "Out of Stock ❌"}</p>
+                                <p><strong>Status:</strong> ${available ? "✅ In Stock – Bhaisaab, turant le jaiye!"
+                        : "❌ Out of Stock – Thoda time dijiye, haath se bana rahe hain 🙏🛠️"}</p>
                             </div>
+                        </div>
+                        <div class="buttons">
+                            <button class = "btn" id ="add" onclick="addCart()">Add to Cart</button>
+                            <button class = "btn" id ="buy" onclick="buyNow()">Buy Now</button>
                         </div>
                         <div class="related-products">
                             sdflkdsk
