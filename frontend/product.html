@@ -17,18 +17,18 @@
         body {
             margin: 0;
             font-family: 'Offside', sans-serif;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            background-color: #f8f9fa;
+            color: #212529;
+            min-height: 100vh;
         }
 
         .main-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 5%;
-            background-color: #f5f5f5;
+            padding: 16px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             flex-wrap: wrap;
         }
 
@@ -45,7 +45,7 @@
         }
 
         .logo {
-            height: 40px;
+            height: 44px;
             width: auto;
         }
 
@@ -53,18 +53,23 @@
             display: flex;
             flex-direction: column;
             font-size: 14px;
-            color: #222;
+            color: #444;
+            margin-left: 10px;
         }
 
         .nav-center a,
         .dropbtn {
             text-decoration: none;
             color: #333;
-            padding: 6px 10px;
+            padding: 8px 14px;
             font-weight: 500;
-            border: none;
-            background: none;
-            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-center a:hover,
+        .dropbtn:hover {
+            background-color: #f1f1f1;
         }
 
         .dropdown {
@@ -75,20 +80,23 @@
             display: none;
             position: absolute;
             background-color: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            z-index: 1;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            z-index: 10;
             flex-direction: column;
+            border-radius: 6px;
+            overflow: hidden;
+            min-width: 160px;
         }
 
         .dropdown:hover .dropdown-content {
-            display: block;
+            display: flex;
         }
 
         .dropdown-content a {
-            display: block;
-            padding: 8px 12px;
+            padding: 10px 16px;
             text-decoration: none;
-            color: #222;
+            color: #333;
+            transition: background 0.2s;
         }
 
         .dropdown-content a:hover {
@@ -107,8 +115,76 @@
             flex-direction: column;
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /*------------------------------------------------------*/
+
+        main {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            min-height: 800px
+        }
+
+        .product-container {
+            min-height: 700px;
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: space-around; */
+            align-items: center;
+            gap: 50px;
+        }
+
+        .product-image {
+            /* margin: 10px; */
+            padding: 30px;
+            width: 50%;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 10px 20px 20px black;
+        }
+
+        .product-details {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 20px;
+        }
+
+        .footer {
+            background: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+
+
+            #product {
+                flex-direction: column;
+            }
+
+            #product h1 {
+                font-size: 24px;
+            }
+
+            .nav-center {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
     </style>
+
 </head>
 
 <body>
@@ -148,13 +224,9 @@
             </div>
         </div>
     </nav>
+    <main id="product">
 
-    <div id="product">
-
-    </div>
-    <div class="related-products">
-
-    </div>
+    </main>
     <footer class="footer">
         This is a footer.
     </footer>
@@ -224,21 +296,39 @@
                     document.getElementById("product").innerHTML = "<p>Product not found.</p>";
                     return;
                 }
+                const {
+                    name, imageUrl, imageAlt, description, price, size, weight,
+                    dimensions, material, color, quantityInStock, sold, available
+                } = product;
+
+                const dimensionText = dimensions ? `${dimensions.length} x ${dimensions.breadth} x ${dimensions.height}` : "N/A";
 
                 const productHTML = `
-                        <div class="product-card">
-                            <div class="product-container">
-                                <div class="product-image">
-                                    <img src="${product.imageUrl}" alt="${product.imageAlt || 'Product Image'}">
-                                </div>
-                                <div class="product-info">
-                                    <h2>${product.name}</h2>
-                                    <p>${product.description}</p>
-                                </div>
+                        <div class="product-container">
+                            <div class="product-image">
+                                <img src="${imageUrl}" alt="${imageAlt || name}">
+                            </div>
+                            <div class="product-details">
+                                <h1 class="product-name">${name}</h1>
+                                <p class="product-description">${description}</p>
+                                <p class="product-price">₹${price}</p>
+                                ${size ? `<p><strong>Size:</strong> ${size}</p>` : ""}
+                                ${weight ? `<p><strong>Weight:</strong> ${weight} kg</p>` : ""}
+                                ${material ? `<p><strong>Material:</strong> ${material}</p>` : ""}
+                                ${color ? `<p><strong>Color:</strong> ${color}</p>` : ""}            
+                                <p><strong>Dimensions:</strong> ${dimensionText} (L × B × H)</p>
+                                <p><strong>Available Stock:</strong> ${quantityInStock}</p>
+                                <p><strong>Sold:</strong> ${sold}</p>
+                                <p><strong>Status:</strong> ${available ? "In Stock ✅" : "Out of Stock ❌"}</p>
                             </div>
                         </div>
+                        <div class="related-products">
+                            sdflkdsk
+                        </div>
                     `;
-                document.getElementById("product").innerHTML = productHTML;
+
+                document.getElementById('product').innerHTML = productHTML;
+
 
             } catch (err) {
                 document.getElementById("product").innerHTML = `<p>Error loading product. ${err}</p>`;
