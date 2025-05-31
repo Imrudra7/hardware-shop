@@ -38,15 +38,6 @@ function toggleMenu() {
     }
   }
 }
-//Optional: Click outside to hide dropdown
-window.onclick = function (event) {
-  if (!event.target.matches('.menu-btn')) {
-    if (dropdownMenu.style.display === "block") {
-      dropdownMenu.style.display = "none";
-    }
-  }
-};
-// Hide dropdown if user clicks outside
 window.onclick = function (event) {
   if (!event.target.matches('.menu-btn')) {
     const dropdown = document.getElementById("dropdownMenu");
@@ -54,9 +45,10 @@ window.onclick = function (event) {
       dropdown.style.display = "none";
     }
   }
-}
+};
 
 document.addEventListener("DOMContentLoaded", function () {
+
   if (document.getElementById("registerForm")) {
     handleRegisterForm();
   }
@@ -108,9 +100,6 @@ function handleLoginForm() {
     showLoader();
     const data = Object.fromEntries(new FormData(form).entries());
 
-
-
-
     try {
       const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: "POST",
@@ -125,7 +114,9 @@ function handleLoginForm() {
         localStorage.setItem("jwtToken", result.token);
 
         alert(result.message);
-        window.location.href = "/";
+        const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirectUrl;
       } else {
         alert(result.message || "Invalid login");
       }
@@ -191,4 +182,7 @@ function handleLogout() {
   hideLoader();
   location.reload();
   //window.location.href = "/login.html";
+}
+function handleLocationSign() {
+
 }

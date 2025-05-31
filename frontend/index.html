@@ -5,8 +5,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The HardWARE Shop</title>
-  <link rel="stylesheet" href="style.css" />
+
   <style>
+    @font-face {
+      font-family: 'Offside';
+      src: url('./fonts/Offside-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Offside', sans-serif;
+      line-height: 1.5;
+      width: 100vw;
+      background-color: #3B5249;
+      color: #cadb9e;
+    }
+
+    h1 {
+      font-size: 4em;
+    }
+
+    nav {
+      width: 100%;
+    }
+
     .main-navbar {
       display: flex;
       justify-content: space-between;
@@ -20,6 +49,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .logo {
@@ -38,6 +68,7 @@
       display: flex;
       gap: 20px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .nav-center a,
@@ -51,41 +82,60 @@
       cursor: pointer;
     }
 
-    .nav-center .dropdown {
+    .dropdown {
       position: relative;
     }
 
-    .nav-center .dropdown-content {
+    .dropdown-content {
       display: none;
       position: absolute;
       background-color: white;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
       z-index: 1;
-    }
-
-    .nav-center .dropdown:hover .dropdown-content {
-      display: block;
+      top: 100%;
+      right: 0;
+      min-width: 150px;
+      flex-direction: column;
+      border-radius: 5px;
     }
 
     .dropdown-content a {
       display: block;
-      padding: 8px 12px;
+      padding: 10px;
       text-decoration: none;
-      color: #222;
+      color: #333;
+      border-radius: 5px;
     }
 
     .dropdown-content a:hover {
-      background-color: #eee;
+      background-color: #02f537;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
     }
 
     .nav-right {
       display: flex;
       align-items: center;
       gap: 20px;
+      flex-wrap: wrap;
     }
 
     .user-menu {
       position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-btn {
+      background-color: #cadb9e;
+      color: black;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
     #dropdownMenu {
@@ -96,11 +146,115 @@
       flex-direction: column;
       background-color: #fff;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1;
     }
 
     .menu-btn:focus+#dropdownMenu,
     #dropdownMenu:hover {
       display: flex;
+    }
+
+    .bgimg {
+      background-image: url('./images/nuts.jpg');
+      background-position: center;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .offside-regular {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .styled {
+      border: 0;
+      line-height: 2.5;
+      padding: 0 20px;
+      font-size: 1rem;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 1px #000;
+      border-radius: 10px;
+      background-color: rgb(220 0 0);
+      background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+      box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .styled:hover {
+      background-color: red;
+    }
+
+    .styled:active {
+      box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      flex-direction: column;
+      min-height: 10vh;
+    }
+
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+
+    .loader-spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #17347C;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-center,
+      .nav-right {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .bgimg h1 {
+        font-size: 2.5rem;
+      }
     }
   </style>
 </head>
@@ -117,7 +271,6 @@
         </div>
       </div>
 
-
       <!-- Main Navigation Links -->
       <div class="nav-center">
         <a href="/">Home</a>
@@ -133,7 +286,7 @@
         <a href="/contact">Contact</a>
       </div>
 
-      <!-- User & Cart (Keep your working IDs as-is) -->
+      <!-- User & Cart -->
       <div class="nav-right">
         <div class="user-menu">
           <button onclick="toggleMenu()" class="menu-btn" id="authBtn">Profile</button>
@@ -157,18 +310,19 @@
       reprehenderit ducimus sed dolorem, quidem eveniet neque?
     </p>
     <a href="./admin-dashboard-loader.html" class="styled">Admin Dashboard</a>
-
-
   </main>
+
   <footer>
     This is Footer. Copyright @ TheHardWareShop | 2025 | Don't Copy
+    <br />
     The test Footer
   </footer>
+
   <div id="loader" class="loader-container">
     <div class="loader-spinner"></div>
   </div>
-</body>
-<script src="script.js"></script>
 
+  <script src="./script.js"></script>
+</body>
 
 </html>
