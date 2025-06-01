@@ -7,47 +7,195 @@
     <title>Admin Dashboard</title>
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            padding: 2rem;
-            background: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f4f6f9;
             height: 100vh;
+            overflow: hidden;
+            /* Prevent full body scrolling */
         }
 
-        .container {
-            background: white;
-            padding: 2rem 3rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+        .dashboard {
+            display: flex;
+            height: 100vh;
+            /* Full viewport height */
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            flex-shrink: 0;
+            height: 100vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            height: 100vh;
+            overflow-y: auto;
+            /* ✅ Right side scrollable */
+        }
+
+        .sidebar h2 {
             text-align: center;
         }
 
-        a#addProductBtn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #007bff;
+        .sidebar a {
+            display: block;
             color: white;
             text-decoration: none;
+            margin: 15px 0;
+            padding: 10px;
             border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
         }
 
-        a#addProductBtn:hover {
-            background-color: #0056b3;
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        /* .main-content {
+            flex: 1;
+            padding: 30px;
+        } */
+
+        .main-content h1 {
+            margin-top: 0;
+        }
+
+        .section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-product-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .add-product-btn:hover {
+            background-color: #2980b9;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <!-- <div class="container">
         <h1>Add Product </h1>
-        <!-- <a href="/addProduct" id="addProductBtn">Add Product</a> -->
         <a href="../add-product-loader.html" id="addProductBtn" class="styled">Add Product</a>
+    </div> -->
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Admin</h2>
+            <a href="/">🏠 Home</a> <!-- ✅ Add this line -->
+            <a onclick="loadSection('products')">📦 Products</a>
+            <a onclick="loadSection('orders')">🛒 Orders</a>
+            <a onclick="loadSection('users')">👥 Users</a>
+            <a href="../add-product-loader.html">➕ Add Product</a>
+        </div>
+
+        <div class="main-content">
+            <h1 id="admin-h1">Welcome, Admin!</h1>
+            <div class="section" id="section-content">
+                <p>Select a section from the sidebar to view data.</p>
+            </div>
+        </div>
     </div>
 </body>
+<script>
+
+    async function loadSection(section) {
+        const sectionDiv = document.getElementById("section-content");
+        sectionDiv.innerHTML = `<p>Loading ${section}...</p>`;
+
+        let url = "";
+        if (section === "products") url = "/api/getallproducts";
+        else if (section === "orders") url = "/api/orders";
+        else if (section === "users") url = "/api/users";
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+            const data = await response.json();
+
+            if (!data || data.length === 0) {
+                sectionDiv.innerHTML = `<p>No ${section} found.</p>`;
+                return;
+            }
+
+            sectionDiv.innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)} List</h2><ul>` +
+                data.map(item => renderItem(section, item)).join('') +
+                `</ul>`;
+
+        } catch (err) {
+            console.error(err);
+            sectionDiv.innerHTML = `<p>Failed to load ${section}. Check console for error.</p>`;
+        }
+    }
+    function renderItem(section, item) {
+        if (section === 'products') {
+            return `
+        <li>
+          <strong>Name:</strong> ${item.name}<br />
+          <strong>Price:</strong> ₹${item.price}<br />
+          <strong>Category:</strong> ${item.category} / ${item.subCategory}<br />
+          <strong>Available:</strong> ${item.available ? 'Yes' : 'No'}
+        </li>
+        <hr/>
+      `;
+        } else if (section === 'orders') {
+            return `
+        <li>
+          <strong>Order ID:</strong> ${item._id}<br />
+          <strong>User:</strong> ${item.user?.name || 'N/A'}<br />
+          <strong>Total:</strong> ₹${item.totalPrice || 'N/A'}<br />
+          <strong>Status:</strong> ${item.status || 'Pending'}
+        </li>
+        <hr/>
+      `;
+        } else if (section === 'users') {
+            return `
+        <li>
+          <strong>Name:</strong> ${item.first_name + " " + item.last_name}<br />
+          <strong>Email:</strong> ${item.email}<br />
+          <strong>Role:</strong> ${item.role}<br />
+          <strong>Mobile:</strong> ${item.mobile}<br />
+          <strong>Address:</strong> ${item.address}<br />
+        </li>
+        <hr/>
+      `;
+        }
+
+        // fallback
+        return `<li>${JSON.stringify(item)}</li>`;
+    }
+</script>
 <script>
     // 1. Token uthao
     const token = localStorage.getItem("jwtToken");
@@ -75,6 +223,8 @@
                     alert("Access denied 🚫 — Admins only!");
                     window.location.href = "/";
                 }
+                document.getElementById("admin-h1").innerText = `Welcome, ${data.user.name}!`;
+
             })
             .catch(err => {
                 console.error("Error verifying token:", err);

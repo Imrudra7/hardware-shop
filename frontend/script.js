@@ -26,15 +26,18 @@ function toggleMenu() {
     const crAcc = document.getElementById("createAccount");
     const sign = document.getElementById("signIn");
     const logout = document.getElementById("logOut");
+    const adminDashboard = document.getElementById("admin-dashboard-loader");
     if (token) {
       crAcc.style.display = "none";
       sign.style.display = "none";
       logout.style.display = "block";
       logout.onclick = handleLogout;
+      adminDashboard.style.display = "block";
     } else {
       crAcc.style.display = "block";
       sign.style.display = "block";
       logout.style.display = "none";
+      adminDashboard.style.display = "none";
     }
   }
 }

@@ -4,6 +4,7 @@ const connectDB = require('./db');
 const path = require('path');
 const User = require('./models/User');
 const Product = require('./models/Product');
+const Order = require('./models/Order');
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require('./routes/cartRoutes');
 
@@ -132,10 +133,28 @@ app.get("/addProduct", (req, res) => {
 //     return res.sendFile(path.join(__dirname, '../frontend/admin/addProduct.html'));
 // });
 // GET ALL USERS
-app.get('/api/users', async (req, res) => {
+app.get('/api/users', authenticateToken, async (req, res) => {
     try {
         const users = await User.find({});  // ✅ Get all documents in 'users' collection
         return res.status(200).json(users);
+    } catch (err) {
+        return res.status(500).json({ message: "Server error: " + err.message });
+
+    }
+});
+app.get('/api/orders', authenticateToken, async (req, res) => {
+    try {
+        const orders = await Order.find({});  // ✅ Get all documents in 'orders' collection
+        return res.status(200).json(orders);
+    } catch (err) {
+        return res.status(500).json({ message: "Server error: " + err.message });
+
+    }
+});
+app.get('/api/getallproducts', authenticateToken, async (req, res) => {
+    try {
+        const products = await Product.find({});  // ✅ Get all documents in 'products' collection
+        return res.status(200).json(products);
     } catch (err) {
         return res.status(500).json({ message: "Server error: " + err.message });
 
