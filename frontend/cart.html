@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product</title>
+    <title>Cart</title>
     <link rel="stylesheet" href="/style.css" />
     <style>
         @font-face {
@@ -127,113 +127,44 @@
             flex-direction: column;
             flex-wrap: wrap;
             min-height: 800px;
-            padding-bottom: 55px
+            padding-bottom: 55px;
+            max-width: 80vw;
+            margin-top: 20px;
+            margin-left: 80px;
+            font-size: larger;
+
         }
 
-        .product-container {
-            min-height: 600px;
-            display: flex;
-            flex-wrap: wrap;
-            /* justify-content: space-around; */
-            /* align-items: center; */
-            gap: 50px;
-        }
 
-        .product-image {
-            /* margin: 10px; */
-            padding: 30px;
-            width: 50%;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 500px;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 10px 20px 20px black;
-        }
-
-        .product-details {
-            box-sizing: border-box;
-            width: 500px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            font-size: 20px;
-        }
-
-        .product-name {
-            font-size: 40px;
-        }
-
-        .product-price {
-            font-size: 25px;
-            font-weight: 900;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: center;
-            min-height: 25px;
-            gap: 50px;
-        }
-
-        .btn {
-            min-width: 230px;
-            min-height: 70px;
-            border: none;
-            border-radius: 10px 10px;
-            font-size: large;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            /* smooth transition */
-            transform: scale(1);
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            /* slight zoom on hover */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            /* soft shadow glow */
-            opacity: 0.95;
-        }
-
-        #add {
-            background-color: blue;
-            color: white;
-            box-shadow: 5px blue;
-        }
 
         #buy {
-            background-color: green;
+            background-color: #28a745;
+            /* Fresh green */
             color: white;
-            box-shadow: 5px green;
-        }
-
-        #add:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 255, 0.4);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: scale(1);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
         }
 
         #buy:hover {
-            box-shadow: 0 8px 20px rgba(0, 128, 0, 0.4);
-        }
-
-        /* Click effect */
-        .btn:active {
-            transform: scale(0.97);
-            /* thoda dab gaya jaisa feel */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            /* shadow thoda kam */
-        }
-
-        #add:active {
-            box-shadow: 0 4px 10px rgba(0, 0, 255, 0.3);
+            transform: scale(1.07);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+            opacity: 0.95;
         }
 
         #buy:active {
-            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.3);
+            transform: scale(0.96);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+            transition: all 0.15s ease;
         }
+
+
 
         .footer {
             background: #343a40;
@@ -295,8 +226,8 @@
                         <a href="#" id="logOut">LogOut</a>
                     </div>
                 </div>
-                <a href="/api/opencart"><img src="/images/header-cart-shopping.svg" class="general-header-style"
-                        alt="shopping cart icon" style="width: 26.75px; height: 24px;"></a>
+                <img src="/images/header-cart-shopping.svg" class="general-header-style" alt="shopping cart icon"
+                    style="width: 26.75px; height: 24px;">
             </div>
         </div>
     </nav>
@@ -357,49 +288,31 @@
             alert("Logged out successfully.👍");
             location.reload();
         }
-        async function addCart(productId) {
+        async function buyNow(cart) {
             try {
                 if (!token) {
                     alert("Please Login first.");
                     localStorage.setItem("redirectAfterLogin", window.location.href);
                     window.location.href = "/login";
+                }
+                console.log(cart);
+
+                if (!cart || !cart.items || cart.items.length === 0) {
+                    alert("Invalid cart data");
+                    return;
                 } else {
-                    const res = await fetch('/api/cart/addtocart', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'authorization': `Bearer ${token}`
-                        },
-
-                        body: JSON.stringify({ productId })
+                    alert("Items available. : Processing");
+                }
+                const cartItems = [];
+                cart.items.forEach(item => {
+                    cartItems.push({
+                        productId: item.product._id,
+                        quantity: item.quantity
                     });
-                    const data = res.json();
-                    if (res.ok) {
-                        alert("Product added to cart!");
-                    } else {
-                        alert(data.error || "Failed to add to cart");
-                    }
-                }
-            } catch (error) {
-                console.error("Add to cart failed:", error);
-                alert("Something went wrong");
-            }
+                });
+                //console.log(cartItems);
 
-        }
-        async function buyNow(productId) {
-            try {
-                if (!token) {
-                    alert("Please Login first.");
-                    localStorage.setItem("redirectAfterLogin", window.location.href);
-                    window.location.href = "/login";
-                }
-                const cartItems = [
-                    {
-                        productId: productId,
-                        quantity: 1
-                    }
-                ];
-                const response = await fetch('/api/cart/buy-now', {
+                const response = await fetch(`/api/cart/buy-now`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -411,70 +324,109 @@
                 const result = await response.json();
                 if (result.success) {
                     alert(result.message + " with order id : " + result.orderId + ".");
+
+                    // 🧹 Step 1: Clear Cart
+                    try {
+                        const clearResponse = await fetch('/api/cart/clear', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}` // only if you're using JWT
+                            }
+                        });
+
+                        const clearResult = await clearResponse.json();
+
+                        if (!clearResponse.success || !clearResult.message.includes("Cart cleared")) {
+                            console.warn("Cart clear failed:", clearResult.message);
+                        }
+                    } catch (err) {
+                        console.error("Cart clear request failed:", err);
+                    }
+                    location.reload();
+                    // ✅ Step 2: Redirect to order details page
                     window.location.href = `/checkout/${result.orderId}`;
                 } else {
                     alert("Something went wrong.");
                 }
             } catch (err) {
-                console.error("Buying failed:", err);
+                console.error("Buy now failed:", err);
                 alert("Something went wrong");
             }
         }
 
-        const API_BASE_URL = location.hostname === "localhost"
-            ? "http://localhost:5000"
-            : "https://hardware-shop-backend-pwf6.onrender.com";
+        // const API_BASE_URL = location.hostname === "localhost"
+        //     ? "http://localhost:5000"
+        //     : "https://hardware-shop-backend-pwf6.onrender.com";
         const productId = window.location.pathname.split("/").pop();
 
         async function fetchProductDetails() {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/getproduct/${productId}`);
-                const data = await res.json();
-                const product = data.product;
-                if (!product || !product.name) {
-                    document.getElementById("product").innerHTML = "<p>Product not found.</p>";
+                const res = await fetch(`/api/cart/getcart`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    }
+                });
+                const cart = await res.json();
+
+                if (!cart || !cart.items || cart.items.length === 0) {
+                    document.getElementById("product").innerHTML = "<p>Cart is Empty</p>";
                     return;
                 }
-                const {
-                    name, imageUrl, imageAlt, description, price, size, weight,
-                    dimensions, material, color, sold, available
-                } = product;
+                function renderCart(cartData) {
+                    let total = 0;
 
-                const dimensionText = dimensions ? `${dimensions.length} x ${dimensions.breadth} x ${dimensions.height}` : "N/A";
-
-                const productHTML = `
-                        <div class="product-container">
-                            <div class="product-image">
-                                <img src="${imageUrl}" alt="${imageAlt || name}">
-                            </div>
-                            <div class="product-details">
-                                <h1 class="product-name">${name}</h1>
-                                <p class="product-description">${description}</p>
-                                <p class="product-price">₹${price}</p>
-                                ${size ? `<p><strong>Size:</strong> ${size}</p>` : ""}
-                                ${weight ? `<p><strong>Weight:</strong> ${weight} kg</p>` : ""}
-                                ${material ? `<p><strong>Material:</strong> ${material}</p>` : ""}
-                                ${color ? `<p><strong>Color:</strong> ${color}</p>` : ""}            
-                                <p><strong>Dimensions:</strong> ${dimensionText} (L × B × H)</p>                               
-                                <p><strong>Sold:</strong> ${sold}</p>
-                                <p><strong>Status:</strong> ${available ? "✅ In Stock – Bhaisaab, turant le jaiye!"
-                        : "❌ Out of Stock – Thoda time dijiye, haath se bana rahe hain 🙏🛠️"}</p>
-                            </div>
-                        </div>
-                        <div class="buttons">
-                            <button class = "btn" id ="add" onclick="addCart('${productId}')">Add to Cart</button>
-                            <button class = "btn" id ="buy" onclick="buyNow('${productId}')">Buy Now</button>
-                        </div>
-                        <div class="related-products">
-                            sdflkdsk
-                        </div>
+                    let cartHTML = `
+                        <table style="width:100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; border-bottom:1px solid #ccc;">Product Name</th>
+                                    <th style="text-align:left; border-bottom:1px solid #ccc;">Price</th>
+                                    <th style="text-align:left; border-bottom:1px solid #ccc;">Quantity</th>
+                                    <th style="text-align:left; border-bottom:1px solid #ccc;">Subtotal</th>
+                                </tr>
+                            </thead>
+                        <tbody>
                     `;
 
-                document.getElementById('product').innerHTML = productHTML;
+                    cartData.items.forEach(item => {
+                        const { name, price } = item.product;
+                        const quantity = item.quantity;
+                        const subtotal = price * quantity;
+                        total += subtotal;
+
+                        cartHTML += `
+                                        <tr>
+                                            <td style="padding: 8px 0;">${name}</td>
+                                            <td>₹${price}</td>
+                                            <td>${quantity}</td>
+                                            <td>₹${subtotal}</td>
+                                        </tr>
+                                    `;
+                    });
+
+                    cartHTML += `
+                                    </tbody>
+                                    </table>
+                                    
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end; margin-top: 20px;">
+                                        <div style="font-weight: bold; font-size: 30px; margin-bottom: 16px;">Total: ₹${total}</div>
+                                        <button class="btn" id="buy">Buy Now</button>
+                                    </div>       
+                                `;
+
+                    return cartHTML;
+                }
+
+                document.getElementById('product').innerHTML = renderCart(cart);
+                // ✅ Add this line to bind the function properly
+                document.getElementById("buy").addEventListener("click", () => buyNow(cart));
 
 
             } catch (err) {
-                document.getElementById("product").innerHTML = `<p>Error loading product. ${err}</p>`;
+                document.getElementById("product").innerHTML = `<p>Error loading cart. ${err}</p>`;
 
             }
         }
@@ -484,7 +436,7 @@
 
 
     </script>
-    <script src="./script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>
