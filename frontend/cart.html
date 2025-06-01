@@ -294,8 +294,9 @@
                     alert("Please Login first.");
                     localStorage.setItem("redirectAfterLogin", window.location.href);
                     window.location.href = "/login";
+                    return;
                 }
-                console.log(cart);
+                //console.log(cart);
 
                 if (!cart || !cart.items || cart.items.length === 0) {
                     alert("Invalid cart data");
