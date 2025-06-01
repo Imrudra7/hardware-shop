@@ -357,18 +357,38 @@
             alert("Logged out successfully.👍");
             location.reload();
         }
-        function addCart() {
-            if (!token) {
-                alert("Please Login first.");
-                localStorage.setItem("redirectAfterLogin", window.location.href);
-                window.location.href = "/login";
-            } else {
+        async function addCart(productId) {
+            try {
+                if (!token) {
+                    alert("Please Login first.");
+                    localStorage.setItem("redirectAfterLogin", window.location.href);
+                    window.location.href = "/login";
+                } else {
+                    const res = await fetch('/api/cart/addtocart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'authorization': `Bearer ${token}`
+                        },
 
+                        body: JSON.stringify({ productId })
+                    });
+                    const data = res.json();
+                    if (res.ok) {
+                        alert("Product added to cart!");
+                    } else {
+                        alert(data.error || "Failed to add to cart");
+                    }
+                }
+            } catch (error) {
+                console.error("Add to cart failed:", error);
+                alert("Something went wrong");
             }
-        }
-        function buyNow() {
 
         }
+        // function buyNow() {
+
+        // }
         const API_BASE_URL = location.hostname === "localhost"
             ? "http://localhost:5000"
             : "https://hardware-shop-backend-pwf6.onrender.com";
@@ -410,7 +430,7 @@
                             </div>
                         </div>
                         <div class="buttons">
-                            <button class = "btn" id ="add" onclick="addCart()">Add to Cart</button>
+                            <button class = "btn" id ="add" onclick="addCart('${productId}')">Add to Cart</button>
                             <button class = "btn" id ="buy" onclick="buyNow()">Buy Now</button>
                         </div>
                         <div class="related-products">

@@ -5,6 +5,9 @@ const path = require('path');
 const User = require('./models/User');
 const Product = require('./models/Product');
 const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require('./routes/cartRoutes');
+
+
 
 
 const cors = require('cors');
@@ -57,20 +60,8 @@ app.use(express.json());
 app.use(cors()); // ⬅️ Allow frontend to access backend
 app.use(productRoutes);
 connectDB();
-
+app.use('/api/cart', cartRoutes);
 const PORT = process.env.PORT || 5000;
-
-
-
-
-function isAdmin(req, res, next) {
-    if (req.user && req.user.role === 'admin') {
-        next(); // ✅ allowed
-    } else {
-        return res.status(403).json({ message: "Access denied: Admins only 🚫" });
-    }
-}
-
 
 
 // Serve frontend from ../frontend
