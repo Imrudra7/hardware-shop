@@ -312,9 +312,9 @@
             Aluminium
         </div>
         <div class="right">
-            <div class="image-section">
+            <!-- <div class="image-section">
                 <img src="/images/pexels-pixabay-35543.jpg" alt="Aluminium Image" />
-            </div>
+            </div> -->
             <div class="products" id="product-list">
                 <!-- Products will be inserted here -->
             </div>
@@ -374,10 +374,7 @@
                         const decoded = jwt_decode(token);
                         // const adminLink = document.getElementById('admin-dashboard-link');
 
-                        if (decoded.role !== 'admin') {
-                            // Hide admin dashboard link
-                            adminDashboard.style.display = 'none';
-                        } else {
+                        if (decoded.role === 'admin') {
                             // Show admin dashboard link
                             adminDashboard.style.display = 'block';
                         }
