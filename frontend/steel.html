@@ -261,6 +261,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
 </head>
 
 <body>
@@ -293,11 +294,13 @@
                     <div id="dropdownMenu" class="dropdown-content">
                         <a id="signIn">Sign In</a>
                         <a href="/register" id="createAccount">Create New Account</a>
-                        <a href="#" id="logOut">LogOut</a>
+                        <a href="#" id="logOut" style="display: none;">LogOut</a>
+                        <a href="/admin-dashboard-loader.html" id="admin-dashboard-loader" style="display: none;">Admin
+                            Dashboard</a>
                     </div>
                 </div>
-                <a href="/api/opencart"><img src="/images/header-cart-shopping.svg" class="general-header-style"
-                        alt="shopping cart icon" style="width: 26.75px; height: 24px;"></a>
+                <a id="cart-link" style="cursor: pointer;"><img src="/images/header-cart-shopping.svg"
+                        class="general-header-style" alt="shopping cart icon" style="width: 26.75px; height: 24px;"></a>
             </div>
         </div>
     </nav>
@@ -335,6 +338,24 @@
                 });
             }
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            const cartIcon = document.getElementById("cart-link");
+            cartIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const jtoken = localStorage.getItem('jwtToken');
+
+                if (!jtoken) {
+                    alert('Kindly Sign in first.🤷‍♂️ ');
+                    localStorage.setItem("redirectAfterLogin", window.location.href);
+                    window.location.href = '/login';
+                    return;
+                }
+
+                window.location.href = '/api/opencart'; // ✅ browser request karega + token bhejna backend ka kaam hai
+            });
+        });
+
 
         function toggleMenu() {
             const menu = document.getElementById("dropdownMenu");
@@ -343,11 +364,28 @@
                 const crAcc = document.getElementById("createAccount");
                 const sign = document.getElementById("signIn");
                 const logout = document.getElementById("logOut");
+                const adminDashboard = document.getElementById("admin-dashboard-loader");
                 if (token) {
                     crAcc.style.display = "none";
                     sign.style.display = "none";
                     logout.style.display = "block";
                     logout.onclick = handleLogout;
+                    // adminDashboard.style.display = "block";
+                    try {
+                        const decoded = jwt_decode(token);
+                        // const adminLink = document.getElementById('admin-dashboard-link');
+
+                        if (decoded.role !== 'admin') {
+                            // Hide admin dashboard link
+                            adminDashboard.style.display = 'none';
+                        } else {
+                            // Show admin dashboard link
+                            adminDashboard.style.display = 'block';
+                        }
+
+                    } catch (e) {
+                        console.error("Invalid token", e);
+                    }
                 } else {
                     crAcc.style.display = "block";
                     sign.style.display = "block";

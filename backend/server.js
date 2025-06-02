@@ -31,11 +31,11 @@ function authenticateToken(req, res, next) {
 
     if (!authHeader) {
         console.log("No Authorization header present! URL:", req.originalUrl);
-        return res.status(401).json({ message: "Access token missing" });
+        return res.status(401).json({ message: "Access token missing. PLease Login first." });
     }
 
     const token = authHeader.split(" ")[1];
-    if (!token) {
+    if (null == token || !token) {
         console.log("Token missing in Authorization header! URL:", req.originalUrl);
         return res.status(401).json({ message: "Access token missing" });
     }

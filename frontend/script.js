@@ -32,7 +32,36 @@ function toggleMenu() {
       sign.style.display = "none";
       logout.style.display = "block";
       logout.onclick = handleLogout;
-      adminDashboard.style.display = "block";
+      // adminDashboard.style.display = "block";
+      try {
+        const decoded = jwt_decode(token);
+        // const adminLink = document.getElementById('admin-dashboard-link');
+
+        if (decoded.role === 'admin') {         // Hide admin dashboard link
+
+          // Show admin dashboard link
+          adminDashboard.style.display = 'block';
+        }
+
+      } catch (e) {
+        console.error("Invalid token", e);
+      }
+      // adminDashboard.style.display = "block";
+      try {
+        const decoded = jwt_decode(token);
+        // const adminLink = document.getElementById('admin-dashboard-link');
+
+        if (decoded.role !== 'admin') {
+          // Hide admin dashboard link
+          adminDashboard.style.display = 'none';
+        } else {
+          // Show admin dashboard link
+          adminDashboard.style.display = 'block';
+        }
+
+      } catch (e) {
+        console.error("Invalid token", e);
+      }
     } else {
       crAcc.style.display = "block";
       sign.style.display = "block";
@@ -63,6 +92,20 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("addProductFOrm");
     handleProductForm();
   }
+  const cartIcon = document.getElementById("cart-link");
+  cartIcon.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const jtoken = localStorage.getItem('jwtToken');
+
+    if (!jtoken) {
+      alert('Kindly Sign in first.🤷‍♂️ ');
+      window.location.href = '/login';
+      return;
+    }
+
+    window.location.href = '/api/opencart'; // ✅ browser request karega + token bhejna backend ka kaam hai
+  });
 });
 
 function handleRegisterForm() {
