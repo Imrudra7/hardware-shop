@@ -170,15 +170,31 @@
         <hr/>
       `;
         } else if (section === 'orders') {
+            const rawDate = item.createdAt;
+            const orderDate = rawDate
+                ? new Date(rawDate).toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                })
+                : 'Pending';
+
+            const orderDateTime = rawDate
+                ? new Date(rawDate).toLocaleString('en-IN')
+                : 'Pending';
+
             return `
-        <li>
-          <strong>Order ID:</strong> ${item._id}<br />
-          <strong>User:</strong> ${item.user?.name || 'N/A'}<br />
-          <strong>Total:</strong> ₹${item.totalPrice || 'N/A'}<br />
-          <strong>Status:</strong> ${item.status || 'Pending'}
-        </li>
-        <hr/>
-      `;
+                    <li>
+                        <strong>Order ID:</strong> ${item._id}<br />
+                        <strong>User:</strong> ${item.userId || 'N/A'}<br />
+                        <strong>Total:</strong> ₹${item.totalAmount || 'N/A'}<br />
+                        <strong>Delivery Status:</strong> ${item.status || 'Pending'}<br />
+                        <strong>Payment Status:</strong> ${item.paymentStatus || 'Unpaid'}<br />
+                        <strong>Order date:</strong> ${orderDate}<br />
+                        <strong>Order Time:</strong> ${orderDateTime}<br />
+                    </li>
+                    <hr/>
+                    `;
         } else if (section === 'users') {
             return `
         <li>
