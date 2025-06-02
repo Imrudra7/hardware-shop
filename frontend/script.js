@@ -92,12 +92,12 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("addProductFOrm");
     handleProductForm();
   }
-  document.getElementById('steel-link').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const response = await fetch(`${API_BASE_URL}/products/steel`);
-    const html = await response.text();
-    document.getElementById('content').innerHTML = html; // assuming you have a <div id="content">
-  });
+  // document.getElementById('steel-link').addEventListener('click', async (e) => {
+  //   e.preventDefault();
+  //   const response = await fetch(`${API_BASE_URL}/products/steel`);
+  //   const html = await response.text();
+  //   document.getElementById('content').innerHTML = html; // assuming you have a <div id="content">
+  // });
 
   const cartIcon = document.getElementById("cart-link");
   cartIcon.addEventListener('click', function (e) {
