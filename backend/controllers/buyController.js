@@ -1,5 +1,7 @@
 const Order = require('../models/Order'); // make sure path is correct
 const Product = require('../models/Product');
+const sendOrderEmails = require('../utils/mailer'); // ✅ Import mailer
+const User = require('../models/User'); // ✅ Check the correct path
 
 const buyController = async (req, res) => {
     try {
@@ -12,7 +14,7 @@ const buyController = async (req, res) => {
             return res.status(400).send("No product is given to buy.Cart is Empty.");
         }
         let totalAmount = 0;
-
+        const orderItems = [];
         for (let item of cartItems) {
             const product = await Product.findById(item.productId);
             if (!product) {
@@ -20,6 +22,11 @@ const buyController = async (req, res) => {
             }
 
             totalAmount += product.price * item.quantity;
+            orderItems.push({
+                name: product.name,
+                qty: item.quantity,
+                price: product.price,
+            });
         }
         console.log(totalAmount);
         // Step 2: Create Order
@@ -33,6 +40,20 @@ const buyController = async (req, res) => {
         console.log("About to save Order: " + newOrder);
 
         await newOrder.save();
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        console.log(user);
+        console.log("📨 About to call sendOrderEmails");
+        await sendOrderEmails({
+            customerName: user.first_name + " " + user.last_name,            // ✅ Name from DB
+            customerEmail: user.email,          // ✅ Email from DB
+            orderItems,
+            totalAmount: totalAmount,
+            mobile: user.mobile,
+            address: user.address
+        });
 
         // Step 3: Return Success
         return res.status(201).json({
