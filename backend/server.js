@@ -88,7 +88,9 @@ app.get('/register', (req, res) => {
 app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'aboutus.html'));
 });
-
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend', 'contactus.html'));
+});
 app.get('/products/steel', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/steel.html'));
 });
