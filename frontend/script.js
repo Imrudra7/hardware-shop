@@ -27,10 +27,12 @@ function toggleMenu() {
     const sign = document.getElementById("signIn");
     const logout = document.getElementById("logOut");
     const adminDashboard = document.getElementById("admin-dashboard-loader");
+    const myOrders = document.getElementById("myOrders");
     if (token) {
       crAcc.style.display = "none";
       sign.style.display = "none";
       logout.style.display = "block";
+      myOrders.style.display = "block";
       logout.onclick = handleLogout;
       // adminDashboard.style.display = "block";
       try {
@@ -66,6 +68,7 @@ function toggleMenu() {
       crAcc.style.display = "block";
       sign.style.display = "block";
       logout.style.display = "none";
+      myOrders.style.display = "none";
       adminDashboard.style.display = "none";
     }
   }

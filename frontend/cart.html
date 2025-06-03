@@ -190,6 +190,29 @@
                 gap: 8px;
             }
         }
+
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+        }
+
+        .loader-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #17347C;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
 </head>
@@ -224,6 +247,7 @@
                         <a id="signIn">Sign In</a>
                         <a href="/register" id="createAccount">Create New Account</a>
                         <a href="#" id="logOut" style="display: none;">LogOut</a>
+                        <a href="/my-orders" id="myOrders">My Orders</a>
                         <a href="/admin-dashboard-loader.html" id="admin-dashboard-loader" style="display: none;">Admin
                             Dashboard</a>
                     </div>
@@ -236,6 +260,9 @@
     <main id="product">
 
     </main>
+    <div id="loader" class="loader-container">
+        <div class="loader-spinner"></div>
+    </div>
     <footer class="footer">
         This is a footer.
     </footer>
@@ -286,6 +313,7 @@
                     crAcc.style.display = "block";
                     sign.style.display = "block";
                     logout.style.display = "none";
+                    myOrders.style.display = "none";
                 }
             }
         }
@@ -304,6 +332,15 @@
             alert("Logged out successfully.👍");
             location.reload();
         }
+        function showLoader() {
+            if (loader)
+                loader.style.display = "flex";
+        }
+
+        function hideLoader() {
+            if (loader)
+                loader.style.display = "none";
+        }
         async function buyNow(cart) {
             try {
                 if (!token) {
@@ -317,9 +354,9 @@
                 if (!cart || !cart.items || cart.items.length === 0) {
                     alert("Invalid cart data");
                     return;
-                } else {
-                    alert("Items available. : Processing");
                 }
+                showLoader();
+
                 const cartItems = [];
                 cart.items.forEach(item => {
                     cartItems.push({
@@ -360,13 +397,17 @@
                     } catch (err) {
                         console.error("Cart clear request failed:", err);
                     }
+                    hideLoader();
                     location.reload();
                     // ✅ Step 2: Redirect to order details page
-                    window.location.href = `/checkout/${result.orderId}`;
+
+                    window.location.href = `/my-orders`;
                 } else {
+                    hideLoader();
                     alert("Something went wrong.");
                 }
             } catch (err) {
+                hideLoader();
                 console.error("Buy now failed:", err);
                 alert("Something went wrong");
             }

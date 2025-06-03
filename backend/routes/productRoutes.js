@@ -4,11 +4,13 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 const jwt = require("jsonwebtoken");
 const { storage } = require("../config/cloudinary");   // 👈 just imported
 const upload = multer({ storage });                // 👈 diskStorage हट गया
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
+const authMiddleware = require('../middleware/authMiddleware'); // JWT ya token check karne ke liye
 
 // Middleware to verify token and admin role
 const verifyAdmin = (req, res, next) => {
@@ -190,6 +192,20 @@ router.get("/api/getproduct/:id", async (req, res) => {
     } catch (error) {
         return res.status(404).json({ success: false, error: "Product nahi mila" + error.message });
         //send("Error during finding product :" + error);
+    }
+});
+router.get('/orders/my', authMiddleware, async (req, res) => {
+    const userId = req.userId;
+    console.log("inside order/my: " + userId);
+
+    try {
+        const orders = await Order.find({ userId }).populate('items.productId');
+        if (orders)
+            return res.json(orders);
+        else
+            return res.json({ success: false, message: "No orders present." });
+    } catch (err) {
+        return res.status(500).json({ message: 'Server error' });
     }
 });
 

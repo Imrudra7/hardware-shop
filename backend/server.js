@@ -101,6 +101,9 @@ app.get('/api/product/:id', (req, res) => {
 app.get('/api/opencart', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/cart.html'));
 });
+app.get('/my-orders', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/myorder.html'));
+});
 // app.get('/admin-dashboard', authenticateToken, isAdmin, (req, res) => {
 //     return res.sendFile(path.join(__dirname, '../frontend/admin/admin-dashboard.html'));
 // });

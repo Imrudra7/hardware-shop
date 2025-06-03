@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Steel Products</title>
+    <title>My Orders</title>
     <link rel="stylesheet" href="/style.css" />
     <style>
         @font-face {
@@ -206,59 +206,76 @@
                 width: 100%;
             }
 
-            .product {
-                flex-direction: column;
-            }
 
-            .left,
-            .right {
-                width: 100%;
-            }
+        }
 
-            .left {
-                font-size: 2rem;
-                text-align: center;
-                padding: 20px;
-            }
+        #ordersContainer {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #ordersContainer>div {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        #ordersContainer>div:hover {
+            transform: scale(1.01);
+        }
+
+        #ordersContainer h4 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #2d3748;
+        }
+
+        #ordersContainer p {
+            margin: 0 0 12px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        #ordersContainer ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        #ordersContainer li {
+            padding: 6px 0;
+            border-bottom: 1px solid #edf2f7;
+            color: #2d3748;
+        }
+
+        #ordersContainer li:last-child {
+            border-bottom: none;
         }
 
         @media (max-width: 600px) {
-            .product-card {
-                width: 100%;
+            #ordersContainer {
+                padding: 0 8px;
             }
-        }
 
-        .product-card {
-            max-width: 600px;
-            margin: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
+            #ordersContainer>div {
+                padding: 16px;
+            }
 
-        .product-card img {
-            width: 100%;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
+            #ordersContainer h4 {
+                font-size: 16px;
+            }
 
-        .product-card h1 {
-            margin-bottom: 10px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        .product-card p {
-            margin: 6px 0;
-            font-size: 16px;
-        }
-
-        .product-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            #ordersContainer p,
+            #ordersContainer li {
+                font-size: 14px;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
@@ -307,21 +324,11 @@
     </nav>
     <!-- Navbar End -->
 
-    <!-- Product Section Start -->
-    <div class="product">
-        <div class="left">
-            UPVC Fiber
-        </div>
-        <div class="right">
-            <!-- <div class="image-section">
-                <img src="/images/pexels-pixabay-35543.jpg" alt="UPVC Image" />
-            </div> -->
-            <div class="products" id="product-list">
-                <!-- Products will be inserted here -->
-            </div>
-        </div>
-    </div>
-    <!-- Product Section End -->
+    <!-- myorders.html -->
+    <h2 style="text-align: center; margin: 20px; font-size: xx-large;">My Orders</h2>
+    <div id="ordersContainer"></div>
+
+
 
     <script>
         const token = localStorage.getItem("jwtToken");
@@ -357,6 +364,7 @@
             });
         });
 
+
         function toggleMenu() {
             const menu = document.getElementById("dropdownMenu");
             menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -369,7 +377,6 @@
                     crAcc.style.display = "none";
                     sign.style.display = "none";
                     logout.style.display = "block";
-                    myOrders.style.display = "block";
                     logout.onclick = handleLogout;
                     // adminDashboard.style.display = "block";
                     try {
@@ -405,38 +412,66 @@
         function handleLogout() {
             localStorage.removeItem("jwtToken");
             alert("Logged out successfully.👍");
-            location.reload();
+            window.location.href = "/";
         }
 
-        const API_BASE_URL = location.hostname === "localhost"
-            ? "http://localhost:5000"
-            : "https://hardware-shop-backend-pwf6.onrender.com";
 
-        fetch(`${API_BASE_URL}/api/products?category=UPVC`)
-            .then((res) => res.json())
-            .then((data) => {
-                const productList = document.getElementById("product-list");
-                if (data && data.products) {
-                    data.products.forEach((product) => {
-                        const card = document.createElement("div");
-                        card.className = "product-card";
-                        card.innerHTML = `
-                            <img src="${product.imageUrl}" alt="${product.imageAlt || product.name}" />
-                            <h3>${product.name}</h3> 
-                            <p>₹${product.price}</p>
-                        `;
-                        card.addEventListener("click", () => {
-                            window.location.href = `/api/product/${product._id}`;
-                        });
-                        productList.appendChild(card);
-                    });
+
+
+        async function fetchOrders() {
+            if (!token) {
+                alert("Please login first.");
+                window.location.href = "/login.html";
+                return;
+            }
+
+            try {
+                const res = await fetch('/orders/my', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+                const container = document.getElementById('ordersContainer');
+
+                if (!res.ok) {
+                    container.innerHTML = `<p>${data.message || 'Something went wrong.'}</p>`;
+                    return;
                 }
-            })
-            .catch((err) => {
-                console.error("Failed to fetch products:", err);
-            });
+
+                if (data.success === false || data.length === 0) {
+                    container.innerHTML = `<p>${data.message || 'No orders yet.'}</p>`;
+                } else {
+                    // Pehle orders ko sort karo (newest first), phir DOM me add karo
+                    data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    for (let order of data) {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+          <h4>Order ID: ${order._id}</h4>
+          <p>Total: ₹${order.totalAmount}</p>
+          <ul>
+            ${order.items.map(item => `
+              <li>${item.productId?.name || 'Unknown Product'} - Qty: ${item.quantity}</li>
+            `).join('')}
+          </ul>
+          <hr>
+        `;
+                        container.appendChild(div);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                document.getElementById('ordersContainer').innerHTML = "<p>Something went wrong. Try again later.</p>";
+            }
+        }
+
+        fetchOrders();
+
+
     </script>
-    <script src="./script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>
