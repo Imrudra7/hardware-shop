@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steel Products</title>
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+        @font-face {
+            font-family: 'Offside';
+            src: url('./fonts/Offside-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Offside', sans-serif;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .main-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%;
+            background-color: #f5f5f5;
+            flex-wrap: wrap;
+        }
+
+        .nav-left,
+        .nav-center,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-center {
+            gap: 20px;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .business-info {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            color: #222;
+        }
+
+        .nav-center a,
+        .dropbtn {
+            text-decoration: none;
+            color: #333;
+            padding: 6px 10px;
+            font-weight: 500;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            flex-direction: column;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #222;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #eee;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        #dropdownMenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn {
+            background-color: #cadb9e;
+            color: black;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .menu-btn:focus+#dropdownMenu,
+        #dropdownMenu:hover {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .main-navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px 20px;
+            }
+
+            .nav-center {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .nav-right {
+                margin-top: 10px;
+                justify-content: space-between;
+                width: 100%;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        p {
+            line-height: 1.7;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <nav>
+        <div class="main-navbar">
+            <div class="nav-left">
+                <img src="/images/vssteel-logo.png" alt="VS STEEL" class="logo" id="main-logo">
+                <div class="business-info">
+                    <span class="tagline">VS Steel - Top of the World - Jhanjharpur, Bihar</span>
+                    <span class="timing">Open Until 6:30pm</span>
+                </div>
+            </div>
+            <div class="nav-center">
+                <a href="/">Home</a>
+                <div class="dropdown">
+                    <button class="dropbtn">Products ▼</button>
+                    <div class="dropdown-content">
+                        <a href="/products/steel">Steel</a>
+                        <a href="/products/aluminium">Aluminium</a>
+                        <a href="/products/upvc">UPVC Fiber</a>
+                    </div>
+                </div>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="nav-right">
+                <div class="user-menu">
+                    <button onclick="toggleMenu()" class="menu-btn" id="authBtn">Profile</button>
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a id="signIn">Sign In</a>
+                        <a href="/register" id="createAccount">Create New Account</a>
+                        <a href="#" id="logOut" style="display: none;">LogOut</a>
+                        <a href="/my-orders" id="myOrders">My Orders</a>
+                        <a href="/admin-dashboard-loader.html" id="admin-dashboard-loader" style="display: none;">Admin
+                            Dashboard</a>
+                    </div>
+                </div>
+                <a id="cart-link" style="cursor: pointer;"><img src="/images/header-cart-shopping.svg"
+                        class="general-header-style" alt="shopping cart icon" style="width: 26.75px; height: 24px;"></a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Product Section Start -->
+    <div class="container">
+        <h1>About Us</h1>
+        <p>
+            Welcome to our hardware store! We specialize in quality steel, aluminum, and UPVC products crafted for
+            strength and style. Our team is committed to delivering durable and customizable solutions for your home,
+            office, and construction needs.
+        </p>
+        <p>
+            Founded with a passion for precision and customer satisfaction, we take pride in every railing, grill, and
+            partition we offer. Whether it’s a sliding window or a custom jhoola, we’ve got you covered.
+        </p>
+    </div>
+    <!-- Product Section End -->
+
+    <script>
+        const token = localStorage.getItem("jwtToken");
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!token) {
+                document.getElementById("authBtn").innerText = "Sign In / Create Account";
+            }
+            const signInLink = document.getElementById("signIn");
+            if (signInLink) {
+                signInLink.addEventListener("click", function () {
+                    // e.preventDefault(); // ⭐ STOP default navigation
+                    localStorage.setItem("redirectAfterLogin", window.location.href);
+                    window.location.href = "/login";
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const cartIcon = document.getElementById("cart-link");
+            cartIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const jtoken = localStorage.getItem('jwtToken');
+
+                if (!jtoken) {
+                    alert('Kindly Sign in first.🤷‍♂️ ');
+                    localStorage.setItem("redirectAfterLogin", window.location.href);
+                    window.location.href = '/login';
+                    return;
+                }
+
+                window.location.href = '/api/opencart'; // ✅ browser request karega + token bhejna backend ka kaam hai
+            });
+        });
+
+
+        function toggleMenu() {
+            const menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+            if (menu.style.display === "block") {
+                const crAcc = document.getElementById("createAccount");
+                const sign = document.getElementById("signIn");
+                const logout = document.getElementById("logOut");
+                const adminDashboard = document.getElementById("admin-dashboard-loader");
+                if (token) {
+                    crAcc.style.display = "none";
+                    sign.style.display = "none";
+                    logout.style.display = "block";
+                    myOrders.style.display = "block";
+                    logout.onclick = handleLogout;
+                    // adminDashboard.style.display = "block";
+                    try {
+                        const decoded = jwt_decode(token);
+                        // const adminLink = document.getElementById('admin-dashboard-link');
+
+                        if (decoded.role === 'admin') {
+                            // Show admin dashboard link
+                            adminDashboard.style.display = 'block';
+                        }
+
+                    } catch (e) {
+                        console.error("Invalid token", e);
+                    }
+                } else {
+                    crAcc.style.display = "block";
+                    sign.style.display = "block";
+                    logout.style.display = "none";
+                    myOrders.style.display = "none";
+                }
+            }
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.menu-btn')) {
+                const dropdown = document.getElementById("dropdownMenu");
+                if (dropdown && dropdown.style.display === "block") {
+                    dropdown.style.display = "none";
+                }
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("jwtToken");
+            alert("Logged out successfully.👍");
+            location.reload();
+        }
+
+
+    </script>
+    <script src="./script.js"></script>
+</body>
+
+</html>
