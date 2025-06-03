@@ -59,10 +59,7 @@ function authenticateToken(req, res, next) {
 const app = express();
 app.use(express.json());
 //app.use(cors()); // ⬅️ Allow frontend to access backend
-app.use(cors({
-    origin: ["http://localhost:5173", "https://vssteel.netlify.app"],
-    credentials: true
-}));
+app.use(cors());
 app.use(productRoutes);
 connectDB();
 app.use('/api/cart', cartRoutes);

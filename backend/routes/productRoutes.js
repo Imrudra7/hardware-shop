@@ -208,5 +208,26 @@ router.get('/orders/my', authMiddleware, async (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
 });
+router.patch('/api/updateproduct/:id', authMiddleware, verifyAdmin, async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+    console.log("Inside Update Product: " + updateData);
 
+    try {
+
+
+        const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
+            new: true,
+            runValidators: true
+        });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+
+        return res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error });
+    }
+});
 module.exports = router;

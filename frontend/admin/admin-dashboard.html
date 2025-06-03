@@ -98,6 +98,11 @@
         li {
             margin-bottom: 8px;
         }
+
+        .editable {
+            margin-bottom: 6px;
+            padding: 4px;
+        }
     </style>
 </head>
 
@@ -125,7 +130,56 @@
     </div>
 </body>
 <script>
+    function toggleEditMode(id, btn) {
+        const container = document.getElementById(`product-${id}`);
+        const inputs = container.querySelectorAll("input.editable");
+        const spans = container.querySelectorAll("span.readonly");
+        const saveBtn = document.getElementById(`save-${id}`);
 
+        inputs.forEach(input => input.style.display = "inline-block");
+        spans.forEach(span => span.style.display = "none");
+        btn.style.display = "none";
+        saveBtn.style.display = "inline-block";
+    }
+
+    async function saveProduct(id) {
+        const container = document.getElementById(`product-${id}`);
+        const inputs = container.querySelectorAll("input.editable");
+
+        const updated = {};
+        inputs.forEach(input => {
+            const field = input.id.replace(`${id}-`, '').replace('-', '.');
+            const value = input.value;
+
+            if (field.startsWith("dimensions.")) {
+                const key = field.split('.')[1];
+                updated.dimensions = updated.dimensions || {};
+                updated.dimensions[key] = value;
+            } else {
+                updated[field] = value;
+            }
+        });
+
+        try {
+            const res = await fetch(`/api/updateproduct/${id}`, {
+                method: 'PATCH', // or 'PUT'
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updated)
+            });
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.message || "Update failed");
+
+            alert("✅ Product updated!");
+            loadSection('products'); // Refresh the list
+        } catch (err) {
+            console.error("Update error:", err);
+            alert("❌ Failed to update product.");
+        }
+    }
     async function loadSection(section) {
         const sectionDiv = document.getElementById("section-content");
         sectionDiv.innerHTML = `<p>Loading ${section}...</p>`;
@@ -158,18 +212,41 @@
             sectionDiv.innerHTML = `<p>Failed to load ${section}. Check console for error.</p>`;
         }
     }
+    //function renderItem(section, item) {
     function renderItem(section, item) {
         if (section === 'products') {
+            const itemId = item._id;
+            const dimensions = item.dimensions || {};
+            const editableFields = [
+                'name', 'price', 'category', 'subCategory', 'description', 'size',
+                'weight', 'material', 'color', 'imageUrl', 'imageAlt', 'quantityInStock',
+                'sold', 'available', 'dimensions.length', 'dimensions.breadth', 'dimensions.height'
+            ];
+
             return `
-        <li>
-          <strong>Name:</strong> ${item.name}<br />
-          <strong>Price:</strong> ₹${item.price}<br />
-          <strong>Category:</strong> ${item.category} / ${item.subCategory}<br />
-          <strong>Available:</strong> ${item.available ? 'Yes' : 'No'}
+        <li id="product-${itemId}">
+            ${editableFields.map(field => {
+                const fieldParts = field.split('.');
+                const label = fieldParts[fieldParts.length - 1];
+                const value = fieldParts.length === 2 ? (item[fieldParts[0]]?.[fieldParts[1]] || '') : (item[field] ?? '');
+                const inputId = `${itemId}-${field.replace('.', '-')}`;
+                return `
+                    <strong>${label}:</strong>
+                    <span class="readonly">${value}</span>
+                    <input type="text" class="editable" id="${inputId}" value="${value}" style="display:none;" />
+                    <br/>
+                `;
+            }).join('')}
+            <button onclick="toggleEditMode('${itemId}', this)">✏️ Edit</button>
+            <button onclick="saveProduct('${itemId}')" style="display:none;" id="save-${itemId}">💾 Save</button>
         </li>
         <hr/>
-      `;
-        } else if (section === 'orders') {
+        `;
+        }
+
+        // Rest of your render code...
+
+        else if (section === 'orders') {
             const rawDate = item.createdAt;
             const orderDate = rawDate
                 ? new Date(rawDate).toLocaleDateString('en-IN', {
