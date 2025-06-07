@@ -7,6 +7,7 @@ const Product = require('./models/Product');
 const Order = require('./models/Order');
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require('./routes/cartRoutes');
+const userRoutes = require('./routes/userRoute');
 
 
 
@@ -63,6 +64,7 @@ app.use(cors());
 app.use(productRoutes);
 connectDB();
 app.use('/api/cart', cartRoutes);
+app.use('/api/user', userRoutes);
 const PORT = process.env.PORT || 5000;
 
 

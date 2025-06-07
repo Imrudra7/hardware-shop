@@ -527,6 +527,12 @@
                     alert('Order creation failed');
                     return;
                 }
+                const userResponse = await fetch('/api/user/me', {
+                    headers: {
+                        'authorization': `Bearer ${token}`
+                    }
+                });
+                const user = await userResponse.json();
 
                 const order = orderData.order;
 
@@ -570,9 +576,9 @@
                         }
                     },
                     prefill: {
-                        name: "Customer Name", // optional, you can set dynamically if you have user info
-                        email: "customer@example.com",
-                        contact: "9999999999"
+                        name: user.first_name + " " + user.last_name, // optional, you can set dynamically if you have user info
+                        email: user.email,
+                        contact: user.mobile
                     },
                     theme: {
                         color: "#3399cc"
