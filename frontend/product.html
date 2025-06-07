@@ -22,6 +22,7 @@
             min-height: 100vh;
         }
 
+        /* ================= NAVBAR ================== */
         .main-navbar {
             display: flex;
             justify-content: space-between;
@@ -119,42 +120,36 @@
             overflow: hidden;
         }
 
-        /*------------------------------------------------------*/
-
+        /* ================= PRODUCT SECTION ================== */
         main {
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            flex-wrap: wrap;
             min-height: 800px;
-            padding-bottom: 55px
+            padding-bottom: 55px;
         }
 
         .product-container {
             min-height: 600px;
             display: flex;
-            flex-wrap: wrap;
-            /* justify-content: space-around; */
-            /* align-items: center; */
             gap: 50px;
+            padding: 20px 5%;
         }
 
         .product-image {
-            /* margin: 10px; */
-            padding: 30px;
             width: 50%;
+            padding: 30px;
         }
 
         .product-image img {
             width: 100%;
             height: 500px;
-            border: none;
+            object-fit: cover;
             border-radius: 10px;
             box-shadow: 10px 20px 20px black;
         }
 
         .product-details {
-            box-sizing: border-box;
             width: 500px;
             padding: 20px;
             display: flex;
@@ -172,43 +167,39 @@
             font-weight: 900;
         }
 
+        /* ================= BUTTONS ================== */
         .buttons {
             display: flex;
             justify-content: center;
-            min-height: 25px;
             gap: 50px;
+            min-height: 25px;
         }
 
         .btn {
             min-width: 230px;
             min-height: 70px;
             border: none;
-            border-radius: 10px 10px;
+            border-radius: 10px;
             font-size: large;
             cursor: pointer;
             transition: all 0.3s ease;
-            /* smooth transition */
             transform: scale(1);
         }
 
         .btn:hover {
             transform: scale(1.05);
-            /* slight zoom on hover */
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            /* soft shadow glow */
             opacity: 0.95;
         }
 
         #add {
             background-color: blue;
             color: white;
-            box-shadow: 5px blue;
         }
 
         #buy {
             background-color: green;
             color: white;
-            box-shadow: 5px green;
         }
 
         #add:hover {
@@ -219,12 +210,9 @@
             box-shadow: 0 8px 20px rgba(0, 128, 0, 0.4);
         }
 
-        /* Click effect */
         .btn:active {
             transform: scale(0.97);
-            /* thoda dab gaya jaisa feel */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            /* shadow thoda kam */
         }
 
         #add:active {
@@ -235,6 +223,7 @@
             box-shadow: 0 4px 10px rgba(0, 128, 0, 0.3);
         }
 
+        /* ================= FOOTER ================== */
         .footer {
             background: #343a40;
             color: #fff;
@@ -243,23 +232,7 @@
             font-size: 14px;
         }
 
-        @media (max-width: 768px) {
-
-
-            #product {
-                flex-direction: column;
-            }
-
-            #product h1 {
-                font-size: 24px;
-            }
-
-            .nav-center {
-                flex-direction: column;
-                gap: 8px;
-            }
-        }
-
+        /* ================= LOADER ================== */
         .loader-container {
             position: fixed;
             top: 0;
@@ -281,6 +254,102 @@
             width: 60px;
             height: 60px;
             animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================= MOBILE RESPONSIVE ================== */
+        @media (max-width: 768px) {
+            .main-navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            .nav-left,
+            .nav-center,
+            .nav-right {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                margin-bottom: 10px;
+            }
+
+            .nav-center a,
+            .dropdown .dropbtn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            .dropdown-content {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                border-top: 1px solid #ccc;
+            }
+
+            .product-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .product-image {
+                width: 100%;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .product-image img {
+                width: 90%;
+                height: auto;
+                max-height: 300px;
+                object-fit: cover;
+                border-radius: 10px;
+                box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .product-details {
+                width: 100%;
+                padding: 10px 0;
+            }
+
+            .product-details h1 {
+                font-size: 20px;
+            }
+
+            .product-details p {
+                font-size: 14px;
+                margin: 6px 0;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .footer {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            #dropdownMenu {
+                right: 0;
+                left: auto;
+                width: 100%;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
