@@ -215,6 +215,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </head>
 
 <body>
@@ -349,69 +351,118 @@
                     window.location.href = "/login";
                     return;
                 }
-                //console.log(cart);
 
                 if (!cart || !cart.items || cart.items.length === 0) {
                     alert("Invalid cart data");
                     return;
                 }
+
                 showLoader();
 
-                const cartItems = [];
-                cart.items.forEach(item => {
-                    cartItems.push({
-                        productId: item.product._id,
-                        quantity: item.quantity
-                    });
-                });
-                //console.log(cartItems);
+                // Prepare cartItems array for backend
+                const cartItems = cart.items.map(item => ({
+                    productId: item.product._id,
+                    quantity: item.quantity
+                }));
 
-                const response = await fetch(`/api/cart/buy-now`, {
+                // Step 1: Create Razorpay order on backend with total amount
+                // You can send cartItems and backend calculates totalAmount dynamically there
+                const orderResponse = await fetch('/api/payment/create-order', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ cartItems })
+                    body: JSON.stringify({ cartItems }) // send cartItems, backend calculates price
                 });
 
-                const result = await response.json();
-                if (result.success) {
-                    alert(result.message + " with order id : " + result.orderId + ".");
+                const orderData = await orderResponse.json();
 
-                    // 🧹 Step 1: Clear Cart
-                    try {
-                        const clearResponse = await fetch('/api/cart/clear', {
-                            method: 'DELETE',
+                if (!orderData.success) {
+                    hideLoader();
+                    alert('Order creation failed');
+                    return;
+                }
+
+                const order = orderData.order; // Razorpay order object
+
+                hideLoader();
+
+                // Step 2: Open Razorpay checkout
+                const options = {
+                    key: "rzp_test_lPRCDfwNUUy24i", // Replace with your Razorpay test/live key
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "VS STEEL",
+                    description: "Purchase Products",
+                    order_id: order.id,
+                    handler: async function (response) {
+                        // Payment success handler
+                        showLoader();
+
+                        const confirmResponse = await fetch('/api/cart/buy-now', {
+                            method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}` // only if you're using JWT
-                            }
+                                'authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                cartItems,
+                                paymentId: response.razorpay_payment_id,
+                                orderId: response.razorpay_order_id,
+                                signature: response.razorpay_signature
+                            })
                         });
 
-                        const clearResult = await clearResponse.json();
+                        const confirmResult = await confirmResponse.json();
+                        hideLoader();
 
-                        if (!clearResponse.success || !clearResult.message.includes("Cart cleared")) {
-                            console.warn("Cart clear failed:", clearResult.message);
+                        if (confirmResult.success) {
+                            alert(confirmResult.message + " with order id : " + confirmResult.orderId + ".");
+
+                            // Clear cart after successful order
+                            try {
+                                const clearResponse = await fetch('/api/cart/clear', {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
+                                    }
+                                });
+                                const clearResult = await clearResponse.json();
+                                if (!clearResponse.ok || !clearResult.message.includes("Cart cleared")) {
+                                    console.warn("Cart clear failed:", clearResult.message);
+                                }
+                            } catch (err) {
+                                console.error("Cart clear request failed:", err);
+                            }
+
+                            // Redirect to orders page
+                            window.location.href = `/my-orders`;
+                        } else {
+                            alert("Payment successful but order confirmation failed.");
                         }
-                    } catch (err) {
-                        console.error("Cart clear request failed:", err);
+                    },
+                    prefill: {
+                        name: "Customer Name", // optionally fill from user data
+                        email: "customer@example.com",
+                        contact: "9999999999"
+                    },
+                    theme: {
+                        color: "#3399cc"
                     }
-                    hideLoader();
-                    location.reload();
-                    // ✅ Step 2: Redirect to order details page
+                };
 
-                    window.location.href = `/my-orders`;
-                } else {
-                    hideLoader();
-                    alert("Something went wrong.");
-                }
+                const rzp = new Razorpay(options);
+                rzp.open();
+
             } catch (err) {
                 hideLoader();
                 console.error("Buy now failed:", err);
                 alert("Something went wrong");
             }
         }
+
 
         // const API_BASE_URL = location.hostname === "localhost"
         //     ? "http://localhost:5000"

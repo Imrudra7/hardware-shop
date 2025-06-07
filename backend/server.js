@@ -282,6 +282,7 @@ app.post('/api/users/login', async (req, res) => {
 app.get('/api/profile', authenticateToken, (req, res) => {
     return res.json({ message: "You are authorized", user: req.user });
 });
+app.use("/api/payment", require("./routes/payment"));
 
 
 

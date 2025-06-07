@@ -33,9 +33,19 @@ const orderSchema = new mongoose.Schema({
         enum: ['unpaid', 'paid', 'failed'],
         default: 'unpaid'
     },
+    razorpayOrderId: { // ✅ Razorpay Order ID
+        type: String
+    },
+    razorpayPaymentId: { // ✅ Razorpay Payment ID
+        type: String
+    },
+    razorpaySignature: { // ✅ Razorpay Signature
+        type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 }, { timestamps: true });
+
 module.exports = mongoose.model("Order", orderSchema);

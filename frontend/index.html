@@ -145,13 +145,21 @@
       display: none;
       flex-direction: column;
       background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      border-radius: var(--border-radius-base);
       z-index: 1;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
 
     .menu-btn:focus+#dropdownMenu,
     #dropdownMenu:hover {
       display: flex;
+      opacity: 1;
+      transform: translateY(0);
+
     }
 
     .bgimg {
@@ -256,6 +264,155 @@
         font-size: 2.5rem;
       }
     }
+
+    body {
+      font-family: 'Offside', sans-serif;
+      line-height: 1.5;
+      background: linear-gradient(to bottom, #dee2e6, #ced4da);
+      color: #212529;
+    }
+
+    h1,
+    h2,
+    h3 {
+      text-align: center;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #6c757d, #adb5bd);
+      padding: 100px 20px 60px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out both;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    .hero-section p {
+      font-size: 1.25rem;
+      max-width: 800px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .products-section {
+      background: linear-gradient(to bottom, #f8f9fa, #dee2e6);
+      padding: 60px 20px;
+    }
+
+    .products-section h2 {
+      margin-bottom: 40px;
+      color: #495057;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: linear-gradient(to top, #ffffff, #e9ecef);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .custom-request-section {
+      background: linear-gradient(to right, #adb5bd, #dee2e6);
+      padding: 60px 20px;
+    }
+
+    .custom-request-section h2 {
+      margin-bottom: 20px;
+      color: #343a40;
+    }
+
+    .custom-request-section form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .custom-request-section textarea,
+    .custom-request-section input[type="text"],
+    .custom-request-section input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #adb5bd;
+    }
+
+    .custom-request-section button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .custom-request-section button:hover {
+      background-color: #495057;
+    }
+
+    footer {
+      background: linear-gradient(to right, #343a40, #6c757d);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
   </style>
   <!-- jwt-decode library -->
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
@@ -307,16 +464,68 @@
     </div>
   </nav>
 
-  <main class="bgimg">
-    <h1 class="offside-regular">VS STEEL</h1>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
-      temporibus voluptas ea, vel magnam mollitia soluta sint, dolores
-      reprehenderit ducimus sed dolorem, quidem eveniet neque?
-    </p>
-    <div id="content"></div>
-    <!-- <a href="./admin-dashboard-loader.html" class="styled">Admin Dashboard</a> -->
-  </main>
+
+  <section class="hero-section">
+    <h1 data-aos="fade-down">VS STEEL</h1>
+    <p data-aos="fade-up">Premium Quality Fabrication & Materials for All Your Architectural Needs</p>
+  </section>
+
+  <section class="products-section">
+    <h2 data-aos="zoom-in">Our Featured Products</h2>
+    <div class="product-grid">
+      <div class="product-card" data-aos="fade-up">
+        <img src="./images/steel_gate.jpg" alt="Steel Gate">
+        <h3>Steel Gate</h3>
+        <p>Durable and stylish steel gates for residential and commercial use.</p>
+      </div>
+      <div class="product-card" data-aos="fade-up">
+        <img src="./images/aluminium_window.jpg" alt="Aluminium Window">
+        <h3>Aluminium Windows</h3>
+        <p>Modern, energy-efficient aluminum window solutions for all needs.</p>
+      </div>
+      <div class="product-card" data-aos="fade-up">
+        <img src="./images/upvc_door.jpg" alt="UPVC Door">
+        <h3>UPVC Doors</h3>
+        <p>Weather-resistant and maintenance-free UPVC doors with sleek finish.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="custom-request-section">
+    <h2 data-aos="fade-right">Custom Product Request</h2>
+    <form onsubmit="handleCustomRequest(event)">
+      <input type="email" id="userEmail" placeholder="Your Email" required>
+      <input type="text" id="userPhone" placeholder="Phone Number" required>
+      <textarea id="customDetails" rows="5" placeholder="Describe your custom product here..." required></textarea>
+      <button type="submit">Submit Request</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 The HardWARE Shop. Built with ❤️ in Jhanjharpur, Bihar</p>
+    <p>Contact us: thehardwareshop@gmail.com | +91-9876543210</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    function handleCustomRequest(event) {
+      event.preventDefault();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in first to request a custom product.");
+        localStorage.setItem("redirectAfterLogin", window.location.href);
+        window.location.href = "/login";
+        return;
+      }
+
+      const email = document.getElementById("userEmail").value;
+      const phone = document.getElementById("userPhone").value;
+      const details = document.getElementById("customDetails").value;
+      alert("Request submitted successfully!");
+    }
+  </script>
 
   <footer>
     This is Footer. Copyright @ TheHardWareShop | 2025 | Don't Copy

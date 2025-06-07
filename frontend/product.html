@@ -284,6 +284,8 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3/build/jwt-decode.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </head>
 
 <body>
@@ -456,6 +458,45 @@
             if (loader)
                 loader.style.display = "none";
         }
+        // async function buyNow(productId) {
+        //     try {
+        //         if (!token) {
+        //             alert("Please Login first.");
+        //             localStorage.setItem("redirectAfterLogin", window.location.href);
+        //             window.location.href = "/login";
+        //             return;
+        //         }
+        //         showLoader();
+        //         const cartItems = [
+        //             {
+        //                 productId: productId,
+        //                 quantity: 1
+        //             }
+        //         ];
+        //         const response = await fetch('/api/cart/buy-now', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'authorization': `Bearer ${token}`
+        //             },
+        //             body: JSON.stringify({ cartItems })
+        //         });
+
+        //         const result = await response.json();
+        //         if (result.success) {
+        //             hideLoader();
+        //             alert(result.message + " with order id : " + result.orderId + ".");
+        //             window.location.href = `/my-orders`;
+        //         } else {
+        //             hideLoader();
+        //             alert("Something went wrong.");
+        //         }
+        //     } catch (err) {
+        //         hideLoader();
+        //         console.error("Buying failed:", err);
+        //         alert("Something went wrong");
+        //     }
+        // }
         async function buyNow(productId) {
             try {
                 if (!token) {
@@ -464,14 +505,13 @@
                     window.location.href = "/login";
                     return;
                 }
+
                 showLoader();
-                const cartItems = [
-                    {
-                        productId: productId,
-                        quantity: 1
-                    }
-                ];
-                const response = await fetch('/api/cart/buy-now', {
+
+
+
+                const cartItems = [{ productId, quantity: 1 }];
+                const orderResponse = await fetch('/api/payment/create-order', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -480,21 +520,75 @@
                     body: JSON.stringify({ cartItems })
                 });
 
-                const result = await response.json();
-                if (result.success) {
+                const orderData = await orderResponse.json();
+
+                if (!orderData.success) {
                     hideLoader();
-                    alert(result.message + " with order id : " + result.orderId + ".");
-                    window.location.href = `/my-orders`;
-                } else {
-                    hideLoader();
-                    alert("Something went wrong.");
+                    alert('Order creation failed');
+                    return;
                 }
+
+                const order = orderData.order;
+
+                hideLoader();
+
+                // Step 2: Open Razorpay checkout
+                const options = {
+                    key: "rzp_test_lPRCDfwNUUy24i", // Replace with your Razorpay key id
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "VS STEEL",
+                    description: "Purchase Product",
+                    order_id: order.id,
+                    handler: async function (response) {
+                        // Payment successful, response contains razorpay_payment_id etc.
+
+                        // Step 3: Inform your backend about successful payment to save order & clear cart
+                        showLoader();
+                        const confirmResponse = await fetch('/api/cart/buy-now', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                cartItems: [{ productId, quantity: 1 }],
+                                paymentId: response.razorpay_payment_id,
+                                orderId: response.razorpay_order_id,
+                                signature: response.razorpay_signature
+                            })
+                        });
+
+                        const confirmResult = await confirmResponse.json();
+                        hideLoader();
+
+                        if (confirmResult.success) {
+                            alert(confirmResult.message + " with order id : " + confirmResult.orderId + ".");
+                            window.location.href = "/my-orders";
+                        } else {
+                            alert("Payment was successful but something went wrong on order confirmation.");
+                        }
+                    },
+                    prefill: {
+                        name: "Customer Name", // optional, you can set dynamically if you have user info
+                        email: "customer@example.com",
+                        contact: "9999999999"
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+
             } catch (err) {
                 hideLoader();
                 console.error("Buying failed:", err);
                 alert("Something went wrong");
             }
         }
+
 
         const API_BASE_URL = location.hostname === "localhost"
             ? "http://localhost:5000"
