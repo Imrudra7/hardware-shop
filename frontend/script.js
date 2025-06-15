@@ -120,7 +120,7 @@ function handleRegisterForm() {
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/users/newUser`, {
+      const res = await fetch(`/api/users/newUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -152,7 +152,7 @@ function handleLoginForm() {
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
+      const res = await fetch(`/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -191,7 +191,7 @@ function handleProductForm() {
     console.log(formData);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/addproduct`, {
+      const res = await fetch(`/api/addproduct`, {
         method: "POST",
         headers: {
           "authorization": `Bearer ${token}`,

@@ -414,7 +414,7 @@
             ? "http://localhost:5000"
             : "https://hardware-shop-backend-pwf6.onrender.com";
 
-        fetch(`${API_BASE_URL}/api/products?category=Aluminium`)
+        fetch(`/api/products?category=Aluminium`)
             .then((res) => res.json())
             .then((data) => {
                 const productList = document.getElementById("product-list");

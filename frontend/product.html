@@ -710,7 +710,7 @@
 
         async function fetchProductDetails() {
             try {
-                const res = await fetch(`${API_BASE_URL}/api/getproduct/${productId}`);
+                const res = await fetch(`/api/getproduct/${productId}`);
                 const data = await res.json();
                 const product = data.product;
                 if (!product || !product.name) {
