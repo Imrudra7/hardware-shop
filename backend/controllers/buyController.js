@@ -70,7 +70,7 @@
 // };
 const Order = require('../models/Order');
 const Product = require('../models/Product');
-const sendOrderEmails = require('../utils/mailer');
+const { sendOrderEmails } = require('../utils/mailer');
 const User = require('../models/User');
 const crypto = require("crypto"); // To verify signature if needed
 

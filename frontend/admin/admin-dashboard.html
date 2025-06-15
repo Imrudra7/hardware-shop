@@ -12,14 +12,13 @@
             background-color: #f4f6f9;
             height: 100vh;
             overflow: hidden;
-            /* Prevent full body scrolling */
         }
 
         .dashboard {
             display: flex;
             height: 100vh;
-            /* Full viewport height */
             overflow: hidden;
+            flex-direction: row;
         }
 
         .sidebar {
@@ -39,7 +38,6 @@
             padding: 30px;
             height: 100vh;
             overflow-y: auto;
-            /* ✅ Right side scrollable */
         }
 
         .sidebar h2 {
@@ -60,11 +58,6 @@
         .sidebar a:hover {
             background-color: #34495e;
         }
-
-        /* .main-content {
-            flex: 1;
-            padding: 30px;
-        } */
 
         .main-content h1 {
             margin-top: 0;
@@ -96,12 +89,63 @@
         }
 
         li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            word-wrap: break-word;
         }
 
         .editable {
             margin-bottom: 6px;
             padding: 4px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* ✅ Responsive Styles for Mobile */
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .sidebar h2 {
+                width: 100%;
+                text-align: center;
+            }
+
+            .sidebar a {
+                margin: 10px;
+                flex: 1 0 40%;
+                text-align: center;
+            }
+
+            .main-content {
+                padding: 15px;
+                height: auto;
+            }
+
+            .section {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .editable {
+                font-size: 14px;
+            }
+
+            .readonly {
+                display: block;
+                margin-bottom: 6px;
+            }
         }
     </style>
 </head>

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const customRequestController = require("../controllers/customRequestController");
 const authMiddleware = require("../middleware/authMiddleware"); // your JWT middleware
 
 // GET /api/users/me
@@ -15,5 +16,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+router.post("/custom-request", authMiddleware, customRequestController);
 
 module.exports = router;

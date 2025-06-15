@@ -423,10 +423,10 @@
     <div class="main-navbar">
       <!-- Logo & Business Info -->
       <div class="nav-left">
-        <img src="./images/vssteel-logo.png" alt="VS STEEL" class="logo" id="main-logo">
+        <a href="/"><img src="./images/vssteel-logo.png" alt="VS STEEL" class="logo" id="main-logo"></a>
         <div class="business-info">
-          <span class="tagline">VS Steel - Top of the World - Jhanjharpur, Bihar</span>
-          <span class="timing">Open Until 6:30pm</span>
+          <span class="tagline">VS Steel - Jhanjharpur, Bihar</span>
+          <span class="timing" id="shopStatus"></span>
         </div>
       </div>
 
@@ -466,7 +466,7 @@
 
 
   <section class="hero-section">
-    <h1 data-aos="fade-down">VS STEEL</h1>
+    <h1 data-aos="fade-down">VS STEEL WORKS</h1>
     <p data-aos="fade-up">Premium Quality Fabrication & Materials for All Your Architectural Needs</p>
   </section>
 
@@ -474,17 +474,17 @@
     <h2 data-aos="zoom-in">Our Featured Products</h2>
     <div class="product-grid">
       <div class="product-card" data-aos="fade-up">
-        <img src="./images/steel_gate.jpg" alt="Steel Gate">
+        <a href="/products/steel"> <img src=" ./images/Aluminium-doors-and-window.jpg" alt="Steel Gate"> </a>
         <h3>Steel Gate</h3>
         <p>Durable and stylish steel gates for residential and commercial use.</p>
       </div>
       <div class="product-card" data-aos="fade-up">
-        <img src="./images/aluminium_window.jpg" alt="Aluminium Window">
+        <a href="/products/aluminium"> <img src="./images/upvc-sliding-window.jpg" alt="Aluminium Window"></a>
         <h3>Aluminium Windows</h3>
         <p>Modern, energy-efficient aluminum window solutions for all needs.</p>
       </div>
       <div class="product-card" data-aos="fade-up">
-        <img src="./images/upvc_door.jpg" alt="UPVC Door">
+        <a href="/products/upvc"> <img src="./images/upvc-window2.png" alt="UPVC Door"></a>
         <h3>UPVC Doors</h3>
         <p>Weather-resistant and maintenance-free UPVC doors with sleek finish.</p>
       </div>
@@ -502,20 +502,78 @@
   </section>
 
   <footer>
-    <p>&copy; 2025 The HardWARE Shop. Built with ❤️ in Jhanjharpur, Bihar</p>
-    <p>Contact us: thehardwareshop@gmail.com | +91-9876543210</p>
+    <p>&copy; 2025 VS Steel Works. Built with ❤️ in Jhanjharpur, Bihar</p>
+    <p>Contact us: vssteel.2025@gmail.com | +91-9204885859</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   <script>
+    // ... (आपका मौजूदा JavaScript कोड) ...
+
+    function updateShopStatus() {
+      const shopStatusElement = document.getElementById('shopStatus');
+      if (!shopStatusElement) return; // If element not found, exit
+
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      // Define shop opening and closing times
+      const openHour = 10; // 10:30 AM
+      const openMinute = 30;
+      const closeHour = 18; // 6:30 PM (18:30 in 24-hour format)
+      const closeMinute = 30;
+
+      // Create Date objects for comparison on the current day
+      const openTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), openHour, openMinute, 0);
+      const closeTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), closeHour, closeMinute, 0);
+
+      // Handle cases where closeTime might be on the next day if shop closes past midnight
+      // (Not applicable for 10:30 AM - 6:30 PM, but good practice for other scenarios)
+      // if (closeTime < openTime) {
+      //     closeTime.setDate(closeTime.getDate() + 1);
+      // }
+
+      if (now >= openTime && now <= closeTime) {
+        shopStatusElement.textContent = "Open until 6:30 PM";
+        shopStatusElement.style.color = "#28a745"; // Green color
+      } else {
+        shopStatusElement.textContent = "Closed";
+        shopStatusElement.style.color = "#dc3545"; // Red color
+      }
+    }
+
+    // Call the function initially when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      //updateAuthUI();
+      const loggedInEmail = localStorage.getItem("userEmail");
+      if (loggedInEmail) {
+        document.getElementById("userEmail").value = loggedInEmail;
+      }
+
+      // Initialize shop status
+      updateShopStatus();
+      // Update status every minute (optional, but good for accuracy)
+      setInterval(updateShopStatus, 60 * 1000); // Update every 1 minute
+
+      // ... (बाकी के DOMContentLoaded इवेंट लिसनर के अंदर का कोड) ...
+    });
+
+    // ... (आपका बाकी JavaScript कोड) ...
+  </script>
+  <script>
     AOS.init();
 
-    function handleCustomRequest(event) {
-      event.preventDefault();
-      const token = localStorage.getItem("token");
+    async function handleCustomRequest(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      showLoader(); // Show the loader while the request is being processed
+
+      const token = localStorage.getItem("jwtToken"); // Use 'authToken' as per your existing code
       if (!token) {
         alert("Please log in first to request a custom product.");
         localStorage.setItem("redirectAfterLogin", window.location.href);
+        hideLoader(); // Hide loader if redirecting
         window.location.href = "/login";
         return;
       }
@@ -523,15 +581,50 @@
       const email = document.getElementById("userEmail").value;
       const phone = document.getElementById("userPhone").value;
       const details = document.getElementById("customDetails").value;
-      alert("Request submitted successfully!");
+
+      // Basic validation (optional but recommended)
+      if (!email || !phone || !details) {
+        alert("Please fill in all fields.");
+        hideLoader();
+        return;
+      }
+
+      // Define your backend endpoint URL
+      // IMPORTANT: Replace this with your actual backend API endpoint
+      const backendEndpoint = '/api/user/custom-request'; // Example: 'https://api.yourdomain.com/custom-request'
+      try {
+        const result = await fetch(backendEndpoint, {
+          method: 'POST', // Specify the HTTP method as POST
+          headers: {
+            'Content-Type': 'application/json', // Tell the server we're sending JSON
+            'Authorization': `Bearer ${token}` // Send the authentication token
+          },
+          body: JSON.stringify({ // Convert the JavaScript object to a JSON string
+            userEmail: email,
+            userPhone: phone,
+            customDetails: details
+          })
+        });
+        if (!result.ok) {
+          hideLoader();
+          alert("Something went wrong : " + result.error);
+        }
+        else {
+          hideLoader();
+          const data = await result.json();
+          alert(data.message);
+        }
+
+      } catch (error) {
+        hideLoader();
+        alert("Something went wrong: " + error);
+      } finally {
+        hideLoader();
+      }
     }
   </script>
 
-  <footer>
-    This is Footer. Copyright @ TheHardWareShop | 2025 | Don't Copy
-    <br />
-    The test Footer
-  </footer>
+
 
   <div id="loader" class="loader-container">
     <div class="loader-spinner"></div>

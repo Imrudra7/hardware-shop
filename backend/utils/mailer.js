@@ -74,5 +74,21 @@ VS Steel Notifications`
     await transporter.sendMail(mailToUser);
     await transporter.sendMail(mailToAdmin);
 };
+const productRequestEmail = async ({ customerName, customerEmail, mobile, address, customDetails }) => {
+    const mailToAdminforProductRequest = {
+        from: process.env.VSEMAIL,
+        to: process.env.ADMINEMAIL, // Replace with actual admin email
+        subject: '📥 Custom Product Needed!',
+        text: `
+Customer Details:
+👤 Name: ${customerName}
+📧 Email: ${customerEmail}
+📱 Mobile: ${mobile}
+🏠 Address: ${address}
 
-module.exports = sendOrderEmails;
+Request Description :
+ ${customDetails}`
+    };
+    await transporter.sendMail(mailToAdminforProductRequest);
+};
+module.exports = { sendOrderEmails, productRequestEmail };
