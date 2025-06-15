@@ -27,7 +27,7 @@ Thank you for placing your order with VS Steel. We truly appreciate your trust i
 ${orderItems.map(item => `• ${item.name} x ${item.qty} = ₹${item.price * item.qty}`).join('\n')}
 
 ----------------------------------------
-Total Amount Payable: ₹${totalAmount}
+Total Amount Paid: ₹${totalAmount}
 ----------------------------------------
 
 Our team will contact you shortly to confirm the order and delivery details.

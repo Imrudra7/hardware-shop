@@ -606,13 +606,16 @@
           })
         });
         if (!result.ok) {
-          hideLoader();
+
           alert("Something went wrong : " + result.error);
         }
         else {
-          hideLoader();
+
           const data = await result.json();
           alert(data.message);
+          document.getElementById("userEmail").value = "";
+          document.getElementById("userPhone").value = "";
+          document.getElementById("customDetails").value = "";
         }
 
       } catch (error) {

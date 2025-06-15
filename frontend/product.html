@@ -224,12 +224,11 @@
         }
 
         /* ================= FOOTER ================== */
-        .footer {
-            background: #343a40;
-            color: #fff;
+        footer {
+            background: linear-gradient(to right, #343a40, #6c757d);
+            color: white;
+            padding: 40px 20px;
             text-align: center;
-            padding: 16px;
-            font-size: 14px;
         }
 
         /* ================= LOADER ================== */
@@ -340,9 +339,15 @@
                 font-size: 16px;
             }
 
-            .footer {
+
+
+            footer {
+                background: linear-gradient(to right, #343a40, #6c757d);
+                color: white;
                 font-size: 14px;
                 padding: 10px;
+                padding: 40px 20px;
+                text-align: center;
             }
 
             #dropdownMenu {
@@ -363,7 +368,7 @@
             <div class="nav-left">
                 <img src="/images/vssteel-logo.png" alt="VS STEEL" class="logo" id="main-logo">
                 <div class="business-info">
-                    <span class="tagline">VS Steel - Top of the World - Jhanjharpur, Bihar</span>
+                    <span class="tagline">VS Steel - Jhanjharpur, Bihar</span>
                     <span class="timing">Open Until 6:30pm</span>
                 </div>
             </div>
@@ -403,8 +408,9 @@
     <div id="loader" class="loader-container">
         <div class="loader-spinner"></div>
     </div>
-    <footer class="footer">
-        This is a footer.
+    <footer>
+        <p>&copy; 2025 VS Steel Works. Built with ❤️ in Jhanjharpur, Bihar</p>
+        <p>Contact us: vssteel.2025@gmail.com | +91-9204885859</p>
     </footer>
     <script>
         const token = localStorage.getItem("jwtToken");
