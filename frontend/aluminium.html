@@ -190,20 +190,22 @@
         @media (max-width: 768px) {
             .main-navbar {
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 10px 20px;
+                align-items: center;
+                font-size: small;
             }
 
-            .nav-center {
-                flex-direction: column;
-                gap: 10px;
+            .nav-center,
+            .nav-right {
                 width: 100%;
+                justify-content: space-around;
+                gap: 10px;
+                margin-top: 10px;
             }
 
             .nav-right {
-                margin-top: 10px;
-                justify-content: space-between;
-                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                gap: 55px;
             }
 
             .product {

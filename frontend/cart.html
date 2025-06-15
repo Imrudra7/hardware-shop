@@ -175,7 +175,25 @@
         }
 
         @media (max-width: 768px) {
+            .main-navbar {
+                flex-direction: column;
+                align-items: center;
+                font-size: small;
+            }
 
+            .nav-center,
+            .nav-right {
+                width: 100%;
+                justify-content: space-around;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .nav-right {
+                display: flex;
+                justify-content: flex-end;
+                gap: 55px;
+            }
 
             #product {
                 flex-direction: column;
@@ -185,10 +203,7 @@
                 font-size: 24px;
             }
 
-            .nav-center {
-                flex-direction: column;
-                gap: 8px;
-            }
+
         }
 
         .loader-container {
