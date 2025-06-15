@@ -195,13 +195,38 @@
         }
 
         #add {
-            background-color: blue;
+            background-color: rgb(43, 119, 251);
+
+
             color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
         }
 
         #buy {
-            background-color: green;
-            color: white;
+            background-color: #0fb539;
+            /* सॉफ्ट फॉरेस्ट ग्रीन */
+            color: #F8F8F8;
+            /* हल्का ऑफ-व्हाइट टेक्स्ट */
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         #add:hover {
@@ -328,18 +353,25 @@
             }
 
             .buttons {
-                flex-direction: column;
+                display: flex;
                 gap: 10px;
                 margin-top: 15px;
+                flex-wrap: wrap;
+                /* New: Buttons wrap to next line if space is limited */
+                justify-content: center;
+                /* New: Center buttons when they wrap */
             }
 
             .btn {
-                width: 100%;
+                flex-grow: 1;
+                flex-shrink: 1;
+                flex-basis: auto;
+                min-width: 120px;
+                max-width: 48%;
                 padding: 12px;
                 font-size: 16px;
+                box-sizing: border-box;
             }
-
-
 
             footer {
                 background: linear-gradient(to right, #343a40, #6c757d);
