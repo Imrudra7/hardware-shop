@@ -32,7 +32,7 @@ Total Amount Paid: ₹${totalAmount}
 
 Our team will contact you shortly to confirm the order and delivery details.
 
-If you have any queries, feel free to reach out to us at vssteel.support@gmail.com.
+If you have any queries, feel free to reach out to us at vssteel.2025@gmail.com.
 
 Thank you once again for choosing VS Steel.
 
