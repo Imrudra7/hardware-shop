@@ -703,9 +703,7 @@
         }
 
 
-        const API_BASE_URL = location.hostname === "localhost"
-            ? "http://localhost:5000"
-            : "https://hardware-shop-backend-pwf6.onrender.com";
+
         const productId = window.location.pathname.split("/").pop();
 
         async function fetchProductDetails() {

@@ -10,9 +10,7 @@
 <body>
     <h2>Verifying admin...</h2>
     <script>
-        const API_BASE_URL = location.hostname === "localhost"
-            ? "http://localhost:5000"
-            : "https://hardware-shop-backend-pwf6.onrender.com";
+
         const token = localStorage.getItem("jwtToken");
 
         if (!token) {

@@ -410,9 +410,7 @@
             location.reload();
         }
 
-        const API_BASE_URL = location.hostname === "localhost"
-            ? "http://localhost:5000"
-            : "https://hardware-shop-backend-pwf6.onrender.com";
+
 
         fetch(`/api/products?category=Aluminium`)
             .then((res) => res.json())
