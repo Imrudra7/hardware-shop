@@ -417,7 +417,7 @@
             .then((res) => res.json())
             .then((data) => {
                 const productList = document.getElementById("product-list");
-                if (data && data.products) {
+                if (data && data.products && data.products.length > 0) {
                     data.products.forEach((product) => {
                         const card = document.createElement("div");
                         card.className = "product-card";
@@ -431,6 +431,14 @@
                         });
                         productList.appendChild(card);
                     });
+                } else {
+                    const noProductMessage = document.createElement("div");
+                    noProductMessage.className = "no-product-message";
+                    noProductMessage.innerHTML = `
+                        <p style="text-align: center; font-size: 3em; color: #585;">No Steel product available.</p>
+                        <p style="text-align: center; font-size: 2em; color: #777;">Please check back later or explore other categories.</p>
+                    `;
+                    productList.appendChild(noProductMessage);
                 }
             })
             .catch((err) => {
