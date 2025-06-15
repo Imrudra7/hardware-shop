@@ -166,13 +166,7 @@
 
 
 
-        .footer {
-            background: #343a40;
-            color: #fff;
-            text-align: center;
-            padding: 16px;
-            font-size: 14px;
-        }
+
 
         @media (max-width: 768px) {
             .main-navbar {
@@ -204,6 +198,99 @@
             }
 
 
+        }
+
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid #ddd;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tbody,
+            tr {
+                display: block;
+                width: 100%;
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #eee;
+                display: flex;
+                flex-wrap: wrap;
+                padding: 10px;
+                background-color: #fcfcfc;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            }
+
+            td {
+                display: flex;
+                flex-direction: column;
+                /* Stack label and value vertically */
+                align-items: flex-start;
+                /* Align stacked content to the left */
+                width: 100%;
+                padding: 8px 5px;
+                font-size: 0.9em;
+                border-bottom: none;
+            }
+
+            td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+                /* Space below label */
+                color: #555;
+                min-width: unset;
+                /* No longer need min-width as they are stacked */
+                flex-shrink: 0;
+                text-align: left;
+            }
+
+            td:nth-child(1) {
+                font-size: 1.05em;
+                font-weight: 600;
+                color: #333;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 10px;
+                margin-bottom: 5px;
+            }
+
+            .cart-summary {
+                align-items: flex-start;
+                /* Align total section to the left */
+                padding: 0 10px;
+                /* Add some padding to match table */
+            }
+
+            .cart-summary div {
+                font-size: 1.8em !important;
+                width: 100%;
+                /* Total text takes full width */
+                text-align: left;
+                /* Align total text to the left */
+            }
+
+            .cart-summary .btn {
+                width: 100%;
+                max-width: 300px;
+                margin-top: 10px;
+            }
+        }
+
+        footer {
+            background: linear-gradient(to right, #343a40, #6c757d);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
         }
 
         .loader-container {
@@ -280,8 +367,9 @@
     <div id="loader" class="loader-container">
         <div class="loader-spinner"></div>
     </div>
-    <footer class="footer">
-        This is a footer.
+    <footer>
+        <p>&copy; 2025 VS Steel Works. Built with ❤️ in Jhanjharpur, Bihar</p>
+        <p>Contact us: vssteel.2025@gmail.com | +91-9204885859</p>
     </footer>
     <script>
         const token = localStorage.getItem("jwtToken");
