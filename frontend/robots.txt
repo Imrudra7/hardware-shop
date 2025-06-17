@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vssteel.onrender.com/sitemap.xml
