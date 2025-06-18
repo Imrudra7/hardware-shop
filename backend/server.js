@@ -16,7 +16,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-//const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
 // Secret key (isse safe jagah environment variable mein store karo)
 const JWT_SECRET = process.env.JWT_SECRET || '7b6f7cae484a1e2438f752ffbce701cd203891908d22406dbefc7e2127046d06';
 if (!JWT_SECRET) {
@@ -269,7 +269,7 @@ app.post('/api/users/login', async (req, res) => {
             name: user.first_name
         };
 
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
 
         return res.status(200).json({
             message: "Log in successfully. 🙂",
