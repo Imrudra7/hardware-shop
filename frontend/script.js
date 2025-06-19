@@ -226,10 +226,29 @@ function handleProductForm() {
   });
 }
 
+function isTokenExpired(token) {
+  if (!token) return true;
+  try {
+    const decoded = jwt_decode(token);
+    const now = Math.floor(Date.now() / 1000); // seconds
+    return decoded.exp < now;
+  } catch (e) {
+    console.log("Invalid token");
+    return true;
+  }
+}
+
+
+if (token && isTokenExpired(token)) {
+  handleLogout();
+  console.log("Expired token removed from storage");
+  window.location.reload(); // ✅ This will refresh the page
+}
+
 function handleLogout() {
   showLoader();
   localStorage.removeItem("jwtToken");
-  alert("Logged out successfully.👍");
+  //alert("Logged out successfully.👍");
   hideLoader();
   location.reload();
   //window.location.href = "/login.html";
